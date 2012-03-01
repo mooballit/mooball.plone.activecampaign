@@ -1,3 +1,4 @@
+# coding: utf-8
 from setuptools import setup, find_packages
 import os
 
@@ -8,7 +9,7 @@ setup(name='mooball.plone.activecampaign',
       version=version,
       description="Active Campaign integration",
       long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open(os.path.join("docs", "CHANGES.txt")).read(),
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
