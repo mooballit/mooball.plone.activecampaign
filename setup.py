@@ -19,7 +19,6 @@ setup(name='mooball.plone.activecampaign',
       keywords='',
       author='Róman Joost',
       author_email='roman@mooball.net',
-      url='http://svn.plone.org/svn/collective/',
       license='ZPL 2.1',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['mooball', 'mooball.plone'],
@@ -28,6 +27,7 @@ setup(name='mooball.plone.activecampaign',
       install_requires=[
           'setuptools',
           'Products.CMFPlone',
+          'plone.directives.form',
       ],
       entry_points="""
       # -*- Entry points: -*-
