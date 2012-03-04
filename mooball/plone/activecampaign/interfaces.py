@@ -60,9 +60,10 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
     A subscriber which can be added/removed from mailing lists.
     """
 
-    def get_listids():
+    def get_subscribed_list_ids():
         """
-        Returns list ids for given subscriber.
+        Returns list ids for which this subscriber is currently
+        subscribed to.
 
         :rtype: Returns a list of tuples for each mailing list this
                 subscriber is subscribed to, e.g. (listid, status)
