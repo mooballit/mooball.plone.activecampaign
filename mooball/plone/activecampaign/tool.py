@@ -1,9 +1,10 @@
+from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
+from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 import Globals
 import OFS.Folder
 import OFS.SimpleItem
 import Products.CMFCore.utils
 import logging
-import mooball.plone.activecampaign.interfaces
 import urllib
 import urllib2
 import zope.interface
@@ -12,8 +13,7 @@ import zope.interface
 class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
                          OFS.Folder.Folder):
 
-    zope.interface.implements(
-        mooball.plone.activecampaign.interfaces.IActiveCampaignTool)
+    zope.interface.implements(IActiveCampaignTool)
 
     id = 'portal_activecampaign'
     meta_type = 'ActiveCampaignTool'
@@ -23,7 +23,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
     manage_options = [opt for opt in manage_options if opt['label'] not in
                       ['Contents', 'View']]
 
-    def synchronise_user_data(self, user):
+    def add_subscriber(self, subscriber):
         url = self.get_api_url()
         params = self.get_synchronise_params(user)
         if not params:
@@ -50,25 +50,8 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
             )
         return encoded
 
-    def get_listid_for_user(self, user):
-        # to avoid circular imports
-        listid = ''
-        testlistid = self.getProperty('testlistid')
-        au_media = self.getProperty('aumedia', '1D6D359BE3260F38')
-        au_nomedia = self.getProperty('aunomedia', '35670385E4D2C5D9')
-        nz_media = self.getProperty('nzmedia', '0EF4DDFE2544494E')
-        nz_nomedia = self.getProperty('nznomedia', '5A1B9A6C01B1CB7E')
-        if not mooball.plone.activecampaign.interfaces.\
-           IActiveCampaignUser.providedBy(user):
-            return listid
-
-        if testlistid:
-            listid = testlistid
-        elif user.country == 'AU':
-            listid = user.user_type == 'Media' and au_media or au_nomedia
-        elif user.country == 'NZ':
-            listid = user.user_type == 'Media' and nz_media or nz_nomedia
-        return listid
+    def get_list_ids(self):
+        return []
 
     def get_api_key(self):
         return self.getProperty('apikey', 'a1d27585d57cfa7d3c88225e9bb98af5')
@@ -79,3 +62,20 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
 
 Globals.InitializeClass(ActiveCampaignTool)
+
+
+class ActiveCampaignSubscriber(object):
+
+    zope.interface.implements(IActiveCampaignSubscriber)
+
+    email = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignSubscriber['email'])
+    first_name = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignSubscriber['first_name'])
+    last_name = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignSubscriber['last_name'])
+    listids = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignSubscriber['listids'])
+
+    def get_subscribed_list_ids(self):
+        return []
