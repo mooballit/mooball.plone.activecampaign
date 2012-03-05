@@ -37,3 +37,6 @@ class TestTool(unittest.TestCase):
     def test_add_subscriber(self):
         tool = zope.component.getUtility(IActiveCampaignTool)
         self.assertRaises(AssertionError, tool.add_subscriber, object)
+        self.assertRaises(AssertionError,
+                          tool.add_subscriber,
+                          ActiveCampaignSubscriber(u'tom@mooball.net'))

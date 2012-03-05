@@ -25,11 +25,14 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
                       ['Contents', 'View']]
 
     def add_subscriber(self, subscriber):
-        assert IActiveCampaignSubscriber.providedBy(subscriber)
         url = self.get_api_url()
+
+        assert IActiveCampaignSubscriber.providedBy(subscriber)
+        assert url
+
         params = dict(
-            api_user=self.api_username,
-            api_pass=self.api_pass,
+            api_user=self.get_api_username(),
+            api_pass=self.get_api_password(),
             api_action='subscriber_add',
             api_output='json',
             email=subscriber.email,
@@ -51,11 +54,14 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
     def get_list_ids(self):
         return []
 
-    def get_api_key(self):
-        return self.getProperty('apikey')
-
     def get_api_url(self):
-        return self.getProperty('apiurl')
+        return self.getProperty('api_url')
+
+    def get_api_username(self):
+        return self.getProperty('api_user')
+
+    def get_api_password(self):
+        return self.getProperty('api_password')
 
 
 Globals.InitializeClass(ActiveCampaignTool)

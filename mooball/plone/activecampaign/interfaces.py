@@ -34,7 +34,17 @@ class IActiveCampaignTool(zope.interface.Interface):
 
     def get_api_url():
         """
-        Returns the API URL or None if no URL is set.
+        Returns the API URL or '' if no URL is set.
+        """
+
+    def get_api_username():
+        """
+        Returns the API username or '' if no URL is set.
+        """
+
+    def get_api_password():
+        """
+        Returns the API password or '' if no password is set.
         """
 
 
