@@ -61,15 +61,6 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
 
     """
 
-    def get_subscribed_list_ids():
-        """
-        Returns list ids for which this subscriber is currently
-        subscribed to.
-
-        :rtype: Returns a list of tuples for each mailing list this
-                subscriber is subscribed to, e.g. (listid, status)
-        """
-
     email = zope.schema.TextLine(
         title=u'Email',
     )

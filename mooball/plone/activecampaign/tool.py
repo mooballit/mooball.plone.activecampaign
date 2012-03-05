@@ -81,6 +81,3 @@ class ActiveCampaignSubscriber(object):
         self.last_name = last_name
         if listids is not None:
             self.listids = listids
-
-    def get_subscribed_list_ids(self):
-        return []
