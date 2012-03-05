@@ -8,5 +8,5 @@ def initialize(context):
     cmf_utils.ToolInit(
         'ActiveCampaign Tool',
         tools=(ActiveCampaignTool, ),
-        icon='tool.gif',
+        icon='www/tool.png',
         ).initialize(context)
