@@ -54,7 +54,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         return []
 
     def get_api_key(self):
-        return self.getProperty('apikey', 'a1d27585d57cfa7d3c88225e9bb98af5')
+        return self.getProperty('apikey')
 
     def get_api_url(self):
         return self.getProperty(
