@@ -8,7 +8,7 @@ from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 
 
-class TestTool(unittest.TestCase):
+class TestToolInterfaces(unittest.TestCase):
 
     def test_interfaces(self):
         self.assertTrue(
