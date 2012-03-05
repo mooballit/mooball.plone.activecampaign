@@ -1,5 +1,6 @@
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
+from mooball.plone.activecampaign.interfaces import ACTIVE
 import Globals
 import OFS.Folder
 import OFS.SimpleItem
@@ -26,30 +27,26 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
     def add_subscriber(self, subscriber):
         assert IActiveCampaignSubscriber.providedBy(subscriber)
         url = self.get_api_url()
-        params = self.get_synchronise_params(subscriber)
+        params = dict(
+            api_user=self.api_username,
+            api_pass=self.api_pass,
+            api_action='subscriber_add',
+            api_output='json',
+            email=subscriber.email,
+            first_name=subscriber.first_name,
+            last_name=subscriber.last_name,
+        )
+        # XXX WTF
+        params.update({'p[123]': subscriber.listids,
+                       'status[123]': ACTIVE
+                      })
         if not params:
             return
 
+        result = urllib2.urlopen(url, urllib.urlencode(params)).read()
         logger = logging.getLogger(self.id)
-        result = urllib2.urlopen(url, params).read()
         logger.log(
             logging.INFO, "Subscribing: %s?%s\n%s" % (url, params, result))
-
-    def get_synchronise_params(self, user):
-        encoded = ''
-        if not user.email or not user.country:
-            msg = ("Can't subscribe users with empty"
-                   " e-mail/country: %s" % user.username)
-            logger = logging.getLogger(self.id)
-            logger.log(logging.ERROR, msg)
-        else:
-            encoded = urllib.urlencode(
-                dict(ApiKey=self.get_api_key(),
-                     ListID=self.get_listid_for_user(user),
-                     Email=user.email,
-                     Name=user.firstName)
-            )
-        return encoded
 
     def get_list_ids(self):
         return []
@@ -58,8 +55,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         return self.getProperty('apikey')
 
     def get_api_url(self):
-        return self.getProperty(
-            'apiurl', 'http://api.createsend.com/api/api.asmx/Subscriber.Add')
+        return self.getProperty('apiurl')
 
 
 Globals.InitializeClass(ActiveCampaignTool)
@@ -77,6 +73,14 @@ class ActiveCampaignSubscriber(object):
         IActiveCampaignSubscriber['last_name'])
     listids = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignSubscriber['listids'])
+
+    def __init__(self, email, first_name='', last_name='',
+                 listids=None):
+        self.email = email
+        self.first_name = first_name
+        self.last_name = last_name
+        if listids is not None:
+            self.listids = listids
 
     def get_subscribed_list_ids(self):
         return []
