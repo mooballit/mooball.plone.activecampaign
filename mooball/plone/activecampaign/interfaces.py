@@ -32,11 +32,6 @@ class IActiveCampaignTool(zope.interface.Interface):
         :rtype: list of ids
         """
 
-    def get_api_key():
-        """
-        Returns the API key or None if no api key is set.
-        """
-
     def get_api_url():
         """
         Returns the API URL or None if no URL is set.
