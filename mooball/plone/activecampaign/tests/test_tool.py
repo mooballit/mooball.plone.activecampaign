@@ -33,3 +33,7 @@ class TestTool(unittest.TestCase):
         tool = zope.component.getUtility(IActiveCampaignTool)
         self.assertTrue(
             IActiveCampaignTool.providedBy(tool))
+
+    def test_add_subscriber(self):
+        tool = zope.component.getUtility(IActiveCampaignTool)
+        self.assertRaises(AssertionError, tool.add_subscriber, object)

@@ -24,8 +24,9 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
                       ['Contents', 'View']]
 
     def add_subscriber(self, subscriber):
+        assert IActiveCampaignSubscriber.providedBy(subscriber)
         url = self.get_api_url()
-        params = self.get_synchronise_params(user)
+        params = self.get_synchronise_params(subscriber)
         if not params:
             return
 
