@@ -74,7 +74,7 @@ class ActiveCampaignSubscriber(object):
     listids = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignSubscriber['listids'])
 
-    def __init__(self, email, first_name='', last_name='',
+    def __init__(self, email, first_name=u'', last_name=u'',
                  listids=None):
         self.email = email
         self.first_name = first_name
