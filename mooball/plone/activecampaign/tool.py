@@ -40,11 +40,15 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
             last_name=subscriber.last_name,
         )
         # XXX WTF
-        params.update({'p[123]': subscriber.listids,
-                       'status[123]': ACTIVE
-                      })
-        if not params:
-            return
+        params.update(
+            dict(
+                (self.format_url_keys('p', subscriber.listids),
+                 subscriber.listids),
+                (self.format_url_keys('status', subscriber.listids),
+                 subscriber.listids)
+            )
+        )
+        params.update(kwargs)
 
         result = urllib2.urlopen(url, urllib.urlencode(params)).read()
         logger = logging.getLogger(self.id)
