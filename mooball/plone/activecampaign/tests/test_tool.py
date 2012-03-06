@@ -9,7 +9,7 @@ import unittest
 import zope.interface
 
 
-class TestToolInterfaces(unittest.TestCase):
+class TestToolUnit(unittest.TestCase):
 
     def test_interfaces(self):
         self.assertTrue(
@@ -18,6 +18,11 @@ class TestToolInterfaces(unittest.TestCase):
         self.assertTrue(
             zope.interface.verify.verifyClass(
                 IActiveCampaignSubscriber, ActiveCampaignSubscriber))
+
+    def test_format_url_keys(self):
+        tool = ActiveCampaignTool()
+        result = tool.format_url_keys('p', [1, 'short-list'])
+        self.assertEquals(['p[1]', 'p[short-list]'], result)
 
 
 class TestTool(unittest.TestCase):

@@ -51,6 +51,14 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         logger.log(
             logging.INFO, "Subscribing: %s?%s\n%s" % (url, params, result))
 
+    def format_url_keys(self, name, items):
+        """ Formats each list item given by items to a active campaign
+        POST compatible format.
+
+        e.g. name = "p", items = [1, 2] it will return ['p[1]', 'p[2]']
+        """
+        return ['{name}[{x}]'.format(name=name, x=x) for x in items]
+
     def get_list_ids(self):
         return []
 
