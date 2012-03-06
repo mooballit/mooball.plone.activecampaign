@@ -24,7 +24,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
     manage_options = [opt for opt in manage_options if opt['label'] not in
                       ['Contents', 'View']]
 
-    def add_subscriber(self, subscriber):
+    def add_subscriber(self, subscriber, listids, **kwargs):
         url = self.get_api_url()
 
         assert IActiveCampaignSubscriber.providedBy(subscriber)
@@ -77,13 +77,8 @@ class ActiveCampaignSubscriber(object):
         IActiveCampaignSubscriber['first_name'])
     last_name = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignSubscriber['last_name'])
-    listids = zope.schema.fieldproperty.FieldProperty(
-        IActiveCampaignSubscriber['listids'])
 
-    def __init__(self, email, first_name=u'', last_name=u'',
-                 listids=None):
+    def __init__(self, email, first_name=u'', last_name=u''):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
-        if listids is not None:
-            self.listids = listids

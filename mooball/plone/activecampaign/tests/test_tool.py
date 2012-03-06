@@ -24,6 +24,9 @@ class TestTool(unittest.TestCase):
 
     layer = ACTIVECAMPAIGN_FUNCTIONAL_TESTING
 
+    def setUp(self):
+        self.tool = zope.component.getUtility(IActiveCampaignTool)
+
     def test_retrieval(self):
         tool = getToolByName(self.layer['portal'],
                              'portal_activecampaign')
@@ -35,8 +38,9 @@ class TestTool(unittest.TestCase):
             IActiveCampaignTool.providedBy(tool))
 
     def test_add_subscriber(self):
-        tool = zope.component.getUtility(IActiveCampaignTool)
-        self.assertRaises(AssertionError, tool.add_subscriber, object)
+        self.assertRaises(AssertionError, self.tool.add_subscriber,
+                          object, [])
         self.assertRaises(AssertionError,
-                          tool.add_subscriber,
-                          ActiveCampaignSubscriber(u'tom@mooball.net'))
+                          self.tool.add_subscriber,
+                          ActiveCampaignSubscriber(u'tom@mooball.net'),
+                          [])

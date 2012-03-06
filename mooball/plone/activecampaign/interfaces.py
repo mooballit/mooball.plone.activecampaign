@@ -13,12 +13,19 @@ class IActiveCampaignTool(zope.interface.Interface):
     (eg.for mailing list subscriptions).
     """
 
-    def add_subscriber(subscriber):
+    def add_subscriber(subscriber, listids, **kwargs):
         """
         Adds given instance which provides
         :class:`IActiveCampaignSubscriber` to the given lists.
 
         :param subscriber: A :class:`IActiveCampaignSubscriber` instance
+        :param listids: A list of mailing list ids to subscribe the
+                        given subscriber to.
+        :param kwargs: Keyword arguments which are passed onto the
+                       subscribe POST (e.g. if you want to pass in
+                       additional fields). No further checking is done
+                       on these arguments, so be sure you are passing in
+                       correct data.
         :rtype: None
         :raises: raises ``AssertionError`` if given subscriber does not
                  provide :class:`IActiveCampaignSubscriber`
@@ -65,11 +72,6 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
     """
     A subscriber which can be added/removed from mailing lists.
 
-    The `listids` attribute should be a list of tuples (listid,
-    status). The `status` should be either
-    :const:`UNCONFIRMED`, :const:`ACTIVE`,
-    :const:`UNSUBSCRIBED`.
-
     """
 
     email = zope.schema.TextLine(
@@ -82,11 +84,4 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
 
     last_name = zope.schema.TextLine(
         title=u'Last Name'
-    )
-
-    listids = zope.schema.List(
-        title=u'Mailing lists',
-        description=(u'A list of tuples of mailing list ids the'
-                     ' subscriber should be added to with status, e.g.'
-                     ' (listid, status)')
     )
