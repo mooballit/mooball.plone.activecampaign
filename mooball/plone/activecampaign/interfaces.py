@@ -13,7 +13,7 @@ class IActiveCampaignTool(zope.interface.Interface):
     (eg.for mailing list subscriptions).
     """
 
-    def add_subscriber(subscriber, listids, **kwargs):
+    def add_subscriber(subscriber, listids, custom_parameters):
         """
         Adds given instance which provides
         :class:`IActiveCampaignSubscriber` to the given lists.
@@ -21,11 +21,11 @@ class IActiveCampaignTool(zope.interface.Interface):
         :param subscriber: A :class:`IActiveCampaignSubscriber` instance
         :param listids: A list of mailing list ids to subscribe the
                         given subscriber to.
-        :param kwargs: Keyword arguments which are passed onto the
-                       subscribe POST (e.g. if you want to pass in
-                       additional fields). No further checking is done
-                       on these arguments, so be sure you are passing in
-                       correct data.
+        :param custom_parameters: Custom parameters as a dictionary which are
+                       passed onto the subscribe POST (e.g. if you want
+                       to pass in additional fields). No further
+                       checking is done on these arguments, so be sure
+                       you are passing in correct data.
         :rtype: None
         :raises: raises ``AssertionError`` if given subscriber does not
                  provide :class:`IActiveCampaignSubscriber`

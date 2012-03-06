@@ -1,6 +1,5 @@
-from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
-from mooball.plone.activecampaign.interfaces import ACTIVE
+from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 import Globals
 import OFS.Folder
 import OFS.SimpleItem
@@ -24,7 +23,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
     manage_options = [opt for opt in manage_options if opt['label'] not in
                       ['Contents', 'View']]
 
-    def add_subscriber(self, subscriber, listids, **kwargs):
+    def add_subscriber(self, subscriber, listids, custom_parameters=None):
         url = self.get_api_url()
 
         assert IActiveCampaignSubscriber.providedBy(subscriber)
@@ -48,7 +47,8 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
                  subscriber.listids)
             )
         )
-        params.update(kwargs)
+        if custom_parameters is not None:
+            params.update(custom_parameters)
 
         result = urllib2.urlopen(url, urllib.urlencode(params)).read()
         logger = logging.getLogger(self.id)
