@@ -7,6 +7,7 @@ import Products.CMFCore.utils
 import logging
 import urllib
 import urllib2
+import zope.container.interfaces
 import zope.interface
 
 
@@ -77,6 +78,17 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
 
 Globals.InitializeClass(ActiveCampaignTool)
+
+
+@zope.component.adapter(IActiveCampaignTool,
+                        zope.container.interfaces.IObjectAddedEvent)
+def after_tool_added(tool, event):
+    """
+    Prepopulate the tool with properties we need.
+    """
+    tool.manage_addProperty('api_url', '', 'string')
+    tool.manage_addProperty('api_user', '', 'string')
+    tool.manage_addProperty('api_password', '', 'string')
 
 
 class ActiveCampaignSubscriber(object):
