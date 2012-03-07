@@ -16,6 +16,13 @@
       description="Active Campaign Tool for Plone"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="mooball.plone.activecampaign"
+      directory="profiles/uninstall"
+      description="Uninstall Active Campaign Tool for Plone"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
 
   <grok:grok package="." />
 

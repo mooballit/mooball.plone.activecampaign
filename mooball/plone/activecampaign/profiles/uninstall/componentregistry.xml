@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<componentregistry>
+  <utilities>
+    <utility
+      interface="mooball.plone.activecampaign.interfaces.IActiveCampaignTool"
+      factory="mooball.plone.activecampaign.tool.ActiveCampaignTool"
+      remove="True"
+    />
+  </utilities>
+</componentregistry>
