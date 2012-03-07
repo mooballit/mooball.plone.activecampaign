@@ -3,11 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. toctree::
+   :maxdepth: 2
+
 ==============================
  mooball.plone.activecampaign
 ==============================
 
-This package integrates Plone with ActiveCampaign.
+.. include:: ../README.txt
 
 API
 ===
