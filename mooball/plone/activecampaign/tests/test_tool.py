@@ -5,6 +5,10 @@ from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 from mooball.plone.activecampaign.tool import ActiveCampaignSubscriber
 from mooball.plone.activecampaign.tool import ActiveCampaignTool
+import StringIO
+import fudge
+import fudge.inspector
+import json
 import unittest
 import zope.interface
 
@@ -35,6 +39,33 @@ class TestToolUnit(unittest.TestCase):
         self.assertEquals(expected, result)
 
 
+class TestToolFudged(unittest.TestCase):
+
+    def setUp(self):
+        self.tool = ActiveCampaignTool()
+        self.tool.manage_addProperty('api_url', 'http://ignored', 'string')
+        self.tool.manage_addProperty('api_username', '', 'string')
+        self.tool.manage_addProperty('api_password', '', 'string')
+
+    @fudge.patch('urllib2.urlopen')
+    def test_add_list(self, urlopen):
+        expected = 1
+        returnval = StringIO.StringIO(
+            json.dumps(
+                dict(id=expected,
+                     result_code=1,
+                     result_message="success",
+                     result_output="json")
+            )
+        )
+        urlopen.is_callable().with_args(
+            'http://ignored',
+            fudge.inspector.arg.any()).returns(returnval)
+
+        result = self.tool.add_list('api-test', 'API Testing')
+        self.assertEqual(expected, result)
+
+
 class TestTool(unittest.TestCase):
 
     layer = ACTIVECAMPAIGN_FUNCTIONAL_TESTING
@@ -55,10 +86,11 @@ class TestTool(unittest.TestCase):
     def test_properties(self):
         self.assertEqual('', self.tool.get_api_url())
 
-    def test_add_subscriber(self):
+    def test_add_subscriber_parameters(self):
         self.assertRaises(AssertionError, self.tool.add_subscriber,
                           object, [])
         self.assertRaises(AssertionError,
                           self.tool.add_subscriber,
                           ActiveCampaignSubscriber(u'tom@mooball.net'),
                           [])
+
