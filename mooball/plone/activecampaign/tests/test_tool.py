@@ -30,8 +30,7 @@ class TestTool(unittest.TestCase):
     layer = ACTIVECAMPAIGN_FUNCTIONAL_TESTING
 
     def setUp(self):
-        self.tool = getToolByName(self.layer['portal'],
-                                  'portal_activecampaign')
+        self.tool = zope.component.getUtility(IActiveCampaignTool)
 
     def test_retrieval(self):
         tool = getToolByName(self.layer['portal'],
