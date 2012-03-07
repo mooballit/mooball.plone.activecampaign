@@ -1,10 +1,11 @@
+from mooball.plone.activecampaign.interfaces import ACTIVE
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
-from mooball.plone.activecampaign.interfaces import ACTIVE
 import Globals
 import OFS.Folder
 import OFS.SimpleItem
 import Products.CMFCore.utils
+import json
 import logging
 import urllib
 import urllib2
@@ -51,6 +52,14 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
         self.post_to_active_campaign(params)
 
+    def add_list(self, listid, title, **kw):
+        params = dict(api_action='list_add',
+                      name=title,
+                      stringid=listid)
+        params.update(kw)
+        result = self.post_to_active_campaign(params)
+        return result['id']
+
     def post_to_active_campaign(self, query):
         """
         Performs the actual post to active campaign and check the
@@ -60,11 +69,19 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         url = self.get_api_url()
         assert url
 
+        query.update(dict(
+            api_user=self.get_api_username(),
+            api_pass=self.get_api_password(),
+            api_output='json',
+        ))
+
         msg = ("Calling {url}/{api_action} with {query}".format(
             url=url, query=query, **query))
         logger.log(logging.INFO, msg)
         result = urllib2.urlopen(url, urllib.urlencode(query)).read()
         logger.log(logging.INFO, result)
+
+        return json.loads(result)
 
     def format_url_keys(self, name, items):
         """

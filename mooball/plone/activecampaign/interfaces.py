@@ -43,6 +43,16 @@ class IActiveCampaignTool(zope.interface.Interface):
     (eg.for mailing list subscriptions).
     """
 
+    def post_to_active_campaign(query):
+        """
+        Performs the actual post to active campaign and check the
+        response.
+
+        The given query is updated with the following data:
+
+        api_user, api_pass, api_output='json'
+        """
+
     def add_subscriber(subscriber, listids, custom_parameters):
         """
         Adds given instance which provides
@@ -60,6 +70,17 @@ class IActiveCampaignTool(zope.interface.Interface):
         :raises: raises ``AssertionError`` if given subscriber does not
                  provide :class:`IActiveCampaignSubscriber`
 
+        """
+
+    def add_list(listid, title, **kw):
+        """
+        Creates a new list with given parameters.
+
+        :param listid: URL-safe list name, e.g.: 'api-test'
+        :param title: Internal list title.
+        :param **kw: Additional keyword arguments which are passed on to
+                     the API.
+        :rtype: id (int) of the list
         """
 
     def get_list_ids():
