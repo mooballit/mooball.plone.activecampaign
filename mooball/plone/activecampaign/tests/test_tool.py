@@ -24,6 +24,16 @@ class TestToolUnit(unittest.TestCase):
         result = tool.format_url_keys('p', [1, 'short-list'])
         self.assertEquals(['p[1]', 'p[short-list]'], result)
 
+    def test_get_formatted_fields(self):
+        tool = ActiveCampaignTool()
+        expected = {'p[1]': '1', 'p[short-list]': 'short-list'}
+        result = tool.get_formatted_fields('p', ['1', 'short-list'])
+        self.assertEquals(expected, result)
+
+        expected = {'p[1]': 'foo'}
+        result = tool.get_formatted_fields('p', ['1'], ['foo'])
+        self.assertEquals(expected, result)
+
 
 class TestTool(unittest.TestCase):
 

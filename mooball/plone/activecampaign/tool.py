@@ -1,5 +1,6 @@
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
+from mooball.plone.activecampaign.interfaces import ACTIVE
 import Globals
 import OFS.Folder
 import OFS.SimpleItem
@@ -25,10 +26,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
                       ['Contents', 'View']]
 
     def add_subscriber(self, subscriber, listids, custom_parameters=None):
-        url = self.get_api_url()
-
         assert IActiveCampaignSubscriber.providedBy(subscriber)
-        assert url
 
         params = dict(
             api_user=self.get_api_username(),
@@ -41,28 +39,58 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         )
         # XXX WTF
         params.update(
-            dict(
-                (self.format_url_keys('p', subscriber.listids),
-                 subscriber.listids),
-                (self.format_url_keys('status', subscriber.listids),
-                 subscriber.listids)
-            )
+            self.get_formatted_fields('p', listids, listids)
         )
+        params.update(
+            self.get_formatted_fields('status', listids,
+                                      [ACTIVE] * len(listids))
+        )
+
         if custom_parameters is not None:
             params.update(custom_parameters)
 
-        result = urllib2.urlopen(url, urllib.urlencode(params)).read()
+        self.post_to_active_campaign(params)
+
+    def post_to_active_campaign(self, query):
+        """
+        Performs the actual post to active campaign and check the
+        response.
+        """
         logger = logging.getLogger(self.id)
-        logger.log(
-            logging.INFO, "Subscribing: %s?%s\n%s" % (url, params, result))
+        url = self.get_api_url()
+        assert url
+
+        msg = ("Calling {url}/{api_action} with {query}".format(
+            url=url, query=query, **query))
+        logger.log(logging.INFO, msg)
+        result = urllib2.urlopen(url, urllib.urlencode(query)).read()
+        logger.log(logging.INFO, result)
 
     def format_url_keys(self, name, items):
-        """ Formats each list item given by items to a active campaign
+        """
+        Formats each list item given by items to a active campaign
         POST compatible format.
 
         e.g. name = "p", items = [1, 2] it will return ['p[1]', 'p[2]']
         """
         return ['{name}[{x}]'.format(name=name, x=x) for x in items]
+
+    def get_formatted_fields(self, name, keys, values=None):
+        """
+        Returns a dictionary of formatted fields.
+
+        This is a helper method to format keys and values into a
+        specific format the API expects.
+
+
+        :param name: A prefix for each key.
+        :param keys: An iterable of keys.
+        :param values: An iterable of values. If None, the keys are used
+                       as values.
+        :rtype: A dictionary of zipped keys and values.
+        """
+        values = values is not None and values or keys
+        return dict(zip(self.format_url_keys(name, keys), values))
 
     def get_list_ids(self):
         return []
