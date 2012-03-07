@@ -67,7 +67,7 @@ class IActiveCampaignTool(zope.interface.Interface):
                        checking is done on these arguments, so be sure
                        you are passing in correct data.
         :rtype: None
-        :raises: raises ``AssertionError`` if given subscriber does not
+        :raises: ``AssertionError`` if given subscriber does not
                  provide :class:`IActiveCampaignSubscriber`
 
         """
@@ -81,6 +81,15 @@ class IActiveCampaignTool(zope.interface.Interface):
         :param **kw: Additional keyword arguments which are passed on to
                      the API.
         :rtype: id (int) of the list
+        """
+
+    def delete_lists(listids):
+        """
+        Deletes given mailing list with given ``listids``.
+
+        :param listids: A list of mailing list ids, either string or
+                        integer.
+        :rtype: 1 = successfull, 0 = failure
         """
 
     def get_list_ids():

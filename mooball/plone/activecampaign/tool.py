@@ -60,6 +60,12 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         result = self.post_to_active_campaign(params)
         return result['id']
 
+    def delete_lists(self, listids):
+        params = dict(api_action='list_delete_list',
+                      ids=','.join(listids))
+        result = self.post_to_active_campaign(params)
+        return result['result_code']
+
     def post_to_active_campaign(self, query):
         """
         Performs the actual post to active campaign and check the
