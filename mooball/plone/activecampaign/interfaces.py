@@ -102,6 +102,7 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
     """
     A subscriber which can be added/removed from mailing lists.
 
+    The subscriber can be created by only providing the email address.
     """
 
     email = zope.schema.TextLine(
@@ -109,9 +110,17 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
     )
 
     first_name = zope.schema.TextLine(
-        title=u'First Name'
+        title=u'First Name',
+        required=False,
     )
 
     last_name = zope.schema.TextLine(
-        title=u'Last Name'
+        title=u'Last Name',
+        required=False,
     )
+
+    sid = zope.schema.Int(
+        title=u'Subscriber ID',
+        required=False,
+    )
+

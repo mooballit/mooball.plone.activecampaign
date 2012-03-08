@@ -157,6 +157,8 @@ class ActiveCampaignSubscriber(object):
 
     zope.interface.implements(IActiveCampaignSubscriber)
 
+    sid = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignSubscriber['sid'])
     email = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignSubscriber['email'])
     first_name = zope.schema.fieldproperty.FieldProperty(
@@ -164,7 +166,8 @@ class ActiveCampaignSubscriber(object):
     last_name = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignSubscriber['last_name'])
 
-    def __init__(self, email, first_name=u'', last_name=u''):
+    def __init__(self, email, first_name=u'', last_name=u'', sid=0):
+        self.sid = sid
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
