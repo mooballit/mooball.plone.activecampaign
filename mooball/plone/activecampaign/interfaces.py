@@ -62,15 +62,15 @@ class IActiveCampaignTool(zope.interface.Interface):
         :rtype: 1 = successfull, 0 = failure
         """
 
-    def delete_subscribers(subscribers):
+    def delete_subscribers(emails):
         """
         Deletes given subscribers.
 
         The given subscribers are looked up by ``email`` to find their
         id and deleted by the given subscriber id.
 
-        :param subscribers: a list of objects providing
-                            :class:`IActiveCampaignSubscriber`
+        :param emails: a list of emails of subscribers which should be
+                       deleted.
         :rtype: None
         """
 
@@ -123,6 +123,12 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
     A subscriber which can be added/removed from mailing lists.
 
     The subscriber can be created by only providing the email address.
+
+    .. note::
+
+        The subscriber id is an ASCII string. Whatever you pass in,
+        it'll become a string. This is because the API doesn't care
+        about any other datatype and even returns id's as strings.
     """
 
     email = zope.schema.TextLine(
@@ -139,8 +145,7 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
         required=False,
     )
 
-    sid = zope.schema.Int(
+    sid = zope.schema.ASCIILine(
         title=u'Subscriber ID',
         required=False,
     )
-

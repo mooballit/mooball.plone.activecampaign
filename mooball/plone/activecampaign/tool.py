@@ -66,6 +66,19 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         result = self.post_to_active_campaign(params)
         return result['result_code']
 
+    def delete_subscribers(self, emails):
+        ids_to_delete = []
+
+        for email in emails:
+            sub = self.get_subscriber_by(email)
+            if sub is not None:
+                ids_to_delete.append(sub.sid)
+
+        if ids_to_delete:
+            params = dict(api_action='subscriber_delete_list',
+                          ids=','.join(ids_to_delete))
+            self.post_to_active_campaign(params)
+
     def post_to_active_campaign(self, query):
         """
         Performs the actual post to active campaign and check the
@@ -176,8 +189,8 @@ class ActiveCampaignSubscriber(object):
     last_name = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignSubscriber['last_name'])
 
-    def __init__(self, email, first_name=u'', last_name=u'', sid=0):
-        self.sid = sid
+    def __init__(self, email, first_name=u'', last_name=u'', sid='0'):
+        self.sid = str(sid)
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
