@@ -9,6 +9,8 @@ import StringIO
 import fudge
 import fudge.inspector
 import json
+import logging
+import testfixtures
 import unittest
 import zope.interface
 
@@ -64,6 +66,23 @@ class TestToolFudged(unittest.TestCase):
 
         result = self.tool.add_list('api-test', 'API Testing')
         self.assertEqual(expected, result)
+
+    @fudge.patch('urllib2.urlopen')
+    def test_post_to_active_campaign(self, fakeurlopen):
+        result = dict(result_code=0,
+                     result_message=u"error occured",
+                     result_output="json")
+        returnval = StringIO.StringIO(json.dumps(result))
+
+        fakeurlopen.is_callable().with_args(
+            'http://ignored',
+            fudge.inspector.arg.any()).returns(returnval)
+
+        with testfixtures.LogCapture(level=logging.ERROR) as l:
+            self.tool.post_to_active_campaign(dict(api_action='api_action'))
+            l.check(
+                (self.tool.id, 'ERROR', result['result_message'])
+            )
 
 
 class TestTool(unittest.TestCase):

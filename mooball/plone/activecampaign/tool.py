@@ -83,11 +83,14 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
         msg = ("Calling {url}/{api_action} with {query}".format(
             url=url, query=query, **query))
-        logger.log(logging.INFO, msg)
+        logger.info(msg)
         result = urllib2.urlopen(url, urllib.urlencode(query)).read()
-        logger.log(logging.INFO, result)
+        logger.info(result)
 
-        return json.loads(result)
+        result = json.loads(result)
+        if result['result_code'] == 0:
+            logger.error(result['result_message'])
+        return result
 
     def format_url_keys(self, name, items):
         """

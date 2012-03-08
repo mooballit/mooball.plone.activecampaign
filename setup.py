@@ -3,7 +3,11 @@ from setuptools import setup, find_packages
 import os
 
 version = '0.1'
-tests_require = ['plone.app.testing', 'fudge']
+tests_require = ['plone.app.testing',
+                 'fudge',
+                 'testfixtures',
+                ]
+
 
 setup(name='mooball.plone.activecampaign',
       version=version,
