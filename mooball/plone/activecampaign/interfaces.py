@@ -62,6 +62,26 @@ class IActiveCampaignTool(zope.interface.Interface):
         :rtype: 1 = successfull, 0 = failure
         """
 
+    def delete_subscribers(subscribers):
+        """
+        Deletes given subscribers.
+
+        The given subscribers are looked up by ``email`` to find their
+        id and deleted by the given subscriber id.
+
+        :param subscribers: a list of objects providing
+                            :class:`IActiveCampaignSubscriber`
+        :rtype: None
+        """
+
+    def get_subscriber_by(email):
+        """
+        Returns a subscriber providing :class:`IActiveCampaignSubscriber`.
+
+        :param email: email of the subscriber to look up as string
+        :rtype: subscriber or None if the subscriber can not be found.
+        """
+
     def get_list_ids():
         """
         Returns all ids of available mailing lists.

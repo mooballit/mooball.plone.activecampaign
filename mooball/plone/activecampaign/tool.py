@@ -133,6 +133,16 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
     def get_api_password(self):
         return self.getProperty('api_password')
 
+    def get_subscriber_by(self, email):
+        params = dict(api_action='subscriber_view_email',
+                      email=email)
+        result = self.post_to_active_campaign(params)
+        if result['result_code'] == 1:
+            return ActiveCampaignSubscriber(
+                result['email'], result['first_name'],
+                result['last_name'], sid=result['id']
+            )
+
 
 Globals.InitializeClass(ActiveCampaignTool)
 
