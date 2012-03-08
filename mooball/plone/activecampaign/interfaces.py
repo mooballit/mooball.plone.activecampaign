@@ -42,14 +42,14 @@ class IActiveCampaignTool(zope.interface.Interface):
 
         """
 
-    def add_list(listid, title, **kw):
+    def add_list(name, title, **kw):
         """
         Creates a new list with given parameters.
 
-        :param listid: URL-safe list name, e.g.: 'api-test'
-        :param title: Internal list title.
-        :param **kw: Additional keyword arguments which are passed on to
-                     the API.
+        :param name: URL-safe list name, e.g.: 'api-test'
+        :param title: List title for internal use.
+        :param kw: Additional keyword arguments which are passed on to
+                   the API.
         :rtype: id (int) of the list
         """
 

@@ -52,10 +52,10 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
         self.post_to_active_campaign(params)
 
-    def add_list(self, listid, title, **kw):
+    def add_list(self, name, title, **kw):
         params = dict(api_action='list_add',
                       name=title,
-                      stringid=listid)
+                      stringid=name)
         params.update(kw)
         result = self.post_to_active_campaign(params)
         return result['id']
@@ -70,6 +70,9 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         """
         Performs the actual post to active campaign and check the
         response.
+
+        :raises: `AssertionError` if the
+                 :meth:`get_api_url` returns an empty string.
         """
         logger = logging.getLogger(self.id)
         url = self.get_api_url()
@@ -138,7 +141,12 @@ Globals.InitializeClass(ActiveCampaignTool)
                         zope.container.interfaces.IObjectAddedEvent)
 def after_tool_added(tool, event):
     """
-    Prepopulate the tool with properties we need.
+    Prepopulate the tool with properties we need. The properties are set
+    to an empty string. Properties which are created by default are:
+
+        * api_url
+        * api_user
+        * api_password
     """
     tool.manage_addProperty('api_url', '', 'string')
     tool.manage_addProperty('api_user', '', 'string')
