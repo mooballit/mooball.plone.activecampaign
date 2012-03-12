@@ -120,13 +120,6 @@ class IActiveCampaignTool(zope.interface.Interface):
         """
 
 
-class IActiveCampaignUser(zope.interface.Interface):
-    """
-    Marker interface for users who can be subscribed/unsubscribed to
-    active campaign.
-    """
-
-
 class IActiveCampaignSubscriber(zope.interface.Interface):
     """
     A subscriber which can be added/removed from mailing lists.
