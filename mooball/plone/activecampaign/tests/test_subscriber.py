@@ -4,7 +4,7 @@ import unittest
 import zope.interface
 
 
-class TestToolUnit(unittest.TestCase):
+class TestSubscriberUnit(unittest.TestCase):
 
     def test_interfaces(self):
         self.assertTrue(
