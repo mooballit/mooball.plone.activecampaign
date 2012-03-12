@@ -42,6 +42,15 @@ class IActiveCampaignTool(zope.interface.Interface):
 
         """
 
+    def add_custom_field(field, listids):
+        """
+        Adds a custom field to mailing lists.
+
+        :param field: A field definition providing
+                      :class:`IActiveCampaignField`.
+        :param listids: A list of listids.
+        """
+
     def add_list(name, title, **kw):
         """
         Creates a new list with given parameters.
@@ -149,3 +158,66 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
         title=u'Subscriber ID',
         required=False,
     )
+
+
+class IActiveCampaignField(zope.interface.Interface):
+    """
+    A field definition for an active campaigin mailing list field.
+    """
+
+    title = zope.schema.TextLine(
+        title=u'Field Title',
+        description=u'Example: Field 1',
+    )
+
+    type = zope.schema.Choice(
+        title=u'Field Type',
+        values=[
+            u'Text Field',
+            u'Text Box',
+            u'Checkbox',
+            u'Radio',
+            u'Dropdown',
+            u'Hidden field',
+            u'List Box',
+            u'Checkbox Group',
+            u'Date',
+        ]
+    )
+
+    req = zope.schema.Bool(
+        title=u'Required Field?',
+    )
+
+    onfocus = zope.schema.TextLine(
+        title=u'Default Value',
+    )
+
+    bubble_content = zope.schema.TextLine(
+        title=u'Tooltip',
+    )
+
+    label = zope.schema.Choice(
+        title=u'Label Position',
+        values=[1, 0],
+        default=1,
+    )
+
+    show_in_list = zope.schema.Choice(
+        title=u'Show on list page?',
+        description=u'Show on subscriber list page (as another column)?',
+        values=[1, 0],
+        default=1,
+    )
+
+    perstag = zope.schema.TextLine(
+        title=u'Placeholder tag',
+        description=u'Unique tag used as a placeholder for dynamic content',
+        default=u'',
+    )
+
+    def get_parameters():
+        """
+        Returns a dictionary of parameters retrieved from
+        :class:`IActiveCampaignField` attributes.
+        """

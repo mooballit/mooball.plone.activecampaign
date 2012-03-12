@@ -1,4 +1,5 @@
 from mooball.plone.activecampaign.interfaces import ACTIVE
+from mooball.plone.activecampaign.interfaces import IActiveCampaignField
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 import Globals
@@ -11,6 +12,7 @@ import urllib
 import urllib2
 import zope.container.interfaces
 import zope.interface
+import zope.schema
 
 
 class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
@@ -59,6 +61,14 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         params.update(kw)
         result = self.post_to_active_campaign(params)
         return result['id']
+
+    def add_custom_field(self, field, listids):
+        params = field.get_parameters()
+        params.update(api_action='list_field_add')
+        params.update(
+            self.get_formatted_fields('p', listids, listids)
+        )
+        self.post_to_active_campaign(params)
 
     def delete_lists(self, listids):
         params = dict(api_action='list_delete_list',
@@ -194,3 +204,36 @@ class ActiveCampaignSubscriber(object):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
+
+
+class ActiveCampaignField(object):
+
+    zope.interface.implements(IActiveCampaignField)
+
+    title = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignField['title'])
+    type = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignField['type'])
+    req = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignField['req'])
+    onfocus = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignField['onfocus'])
+    bubble_content = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignField['bubble_content'])
+    label = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignField['label'])
+    show_in_list = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignField['show_in_list'])
+    perstag = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignField['perstag'])
+
+    def __init__(self, **kw):
+        for key, val in kw.items():
+            setattr(self, key, val)
+
+    def get_parameters(self):
+        result = dict()
+        for fid, field in zope.schema.getFieldsInOrder(
+            IActiveCampaignField):
+            result[fid] = field.get(self)
+        return result
