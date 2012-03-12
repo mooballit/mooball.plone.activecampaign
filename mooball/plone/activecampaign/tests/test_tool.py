@@ -49,34 +49,35 @@ class TestToolFudged(unittest.TestCase):
         self.tool.manage_addProperty('api_username', '', 'string')
         self.tool.manage_addProperty('api_password', '', 'string')
 
+    def fudgify(self, resultdata, fakeurlopen):
+        """ Encodes it to json and declares a call order on the fudged
+            urllib2.urlopen.
+        """
+        returnval = StringIO.StringIO(json.dumps(resultdata))
+        fakeurlopen.is_callable().with_args(
+            'http://ignored',
+            fudge.inspector.arg.any()).returns(returnval)
+        return fakeurlopen
+
     @fudge.patch('urllib2.urlopen')
     def test_add_list(self, urlopen):
         expected = 1
-        returnval = StringIO.StringIO(
-            json.dumps(
-                dict(id=expected,
-                     result_code=1,
-                     result_message="success",
-                     result_output="json")
-            )
-        )
-        urlopen.is_callable().with_args(
-            'http://ignored',
-            fudge.inspector.arg.any()).returns(returnval)
+        resultdata = dict(id=expected,
+                          result_code=1,
+                          result_message="success",
+                          result_output="json")
+        urlopen = self.fudgify(resultdata, urlopen)
 
         result = self.tool.add_list('api-test', 'API Testing')
         self.assertEqual(expected, result)
 
     @fudge.patch('urllib2.urlopen')
-    def test_post_to_active_campaign(self, fakeurlopen):
+    def test_post_to_active_campaign(self, urlopen):
         result = dict(result_code=0,
                      result_message=u"error occured",
                      result_output="json")
-        returnval = StringIO.StringIO(json.dumps(result))
 
-        fakeurlopen.is_callable().with_args(
-            'http://ignored',
-            fudge.inspector.arg.any()).returns(returnval)
+        urlopen = self.fudgify(result, urlopen)
 
         with testfixtures.LogCapture(level=logging.ERROR) as l:
             self.tool.post_to_active_campaign(dict(api_action='api_action'))
