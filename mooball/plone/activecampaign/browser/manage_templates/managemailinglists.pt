@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="plone">
+
+  <body>
+
+    <metal:content-core fill-slot="content">
+      <h1 class="documentFirstHeading">Manage Mailing Lists</h1>
+
+      <p>
+        The following information is cached and may not reflect recent
+        changes in the ActiveCampaign management interface.
+      </p>
+      <form action=".">
+        <table class="listing" tal:define="info context/get_list_information">
+          <thead>
+            <th></th>
+            <th>Name</th>
+            <th>Subscribers</th>
+            <th>Campaigns Sent</th>
+            <th>Emails Sent</th>
+          </thead>
+          <tbody>
+            <tr tal:repeat="item info">
+              <td>
+                <input type="checkbox" name="delete"
+                  tal:attributes="value item/listid" />
+              </td>
+              <td tal:content="item/name" />
+              <td tal:content="item/subscribers" />
+              <td tal:content="item/campaigns" />
+              <td tal:content="item/emails" />
+            </tr>
+          </tbody>
+        </table>
+        <input type="submit" name="delete" value="Delete Selected" />
+      </form>
+    </metal:content-core>
+
+  </body>
+</html>
