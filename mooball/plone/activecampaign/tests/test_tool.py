@@ -72,6 +72,31 @@ class TestToolFudged(unittest.TestCase):
         self.assertEqual(expected, result)
 
     @fudge.patch('urllib2.urlopen')
+    def test_get_list_information(self, urlopen):
+        resultdata = {
+            0: {'id': '2',
+                'stringid': 'bd-test',
+                'name': 'BD-Test',
+                'listid': '2'
+               },
+            1: {'id': 'foobar',
+                'stringid': 'another-test',
+                'name': 'Bla',
+                'listid': '8',
+               },
+            'result_code': 1,
+            'result_message': 'success',
+            'result_output': 'json',
+        }
+        urlopen = self.fudgify(resultdata, urlopen)
+
+        result = self.tool.get_list_information()
+        self.assertEqual(2, len(result))
+
+        result = self.tool.get_list_ids()
+        self.assertEqual([u'8', u'2'], result)
+
+    @fudge.patch('urllib2.urlopen')
     def test_post_to_active_campaign(self, urlopen):
         result = dict(result_code=0,
                      result_message=u"error occured",

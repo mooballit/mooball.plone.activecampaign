@@ -8,6 +8,8 @@ import OFS.SimpleItem
 import Products.CMFCore.utils
 import json
 import logging
+import plone.memoize.ram
+import time
 import urllib
 import urllib2
 import zope.container.interfaces
@@ -151,7 +153,23 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         return dict(zip(self.format_url_keys(name, keys), values))
 
     def get_list_ids(self):
-        return []
+        return [x['listid'] for x in self.get_list_information()]
+
+    @plone.memoize.ram.cache(lambda *args: time.time() // (60 * 60))
+    def get_list_information(self, listids=None):
+        idstolist = listids is not None and listids or 'all'
+        result = []
+        json = self.post_to_active_campaign(
+            dict(api_action='list_list',
+                 ids=idstolist,
+                 global_fields='1')
+        )
+        del json['result_code']
+        del json['result_output']
+        del json['result_message']
+        for k in json.keys():
+            result.append(json[k])
+        return result
 
     def get_api_url(self):
         return self.getProperty('api_url')

@@ -101,6 +101,16 @@ class IActiveCampaignTool(zope.interface.Interface):
         :rtype: list of ids
         """
 
+    def get_list_information():
+        """
+        Returns information associated with each mailing list.
+
+        This method is heavily cached (for 1h). The information could be
+        outdated.
+
+        :rtype: List of dictionaries.
+        """
+
     def get_api_url():
         """
         Returns the API URL or '' if no URL is set.
