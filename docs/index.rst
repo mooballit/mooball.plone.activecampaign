@@ -11,6 +11,7 @@
 ==============================
 
 .. include:: ../README.txt
+.. include:: ../mooball/plone/activecampaign/README.txt
 
 API
 ===
