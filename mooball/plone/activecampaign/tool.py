@@ -17,6 +17,12 @@ import zope.interface
 import zope.schema
 
 
+def _get_list_information_cachekey(method, listids=None,
+                                   forcereload=False):
+    cachekey = forcereload and 1 or time.time() // (60 * 60)
+    return cachekey
+
+
 class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
                          OFS.Folder.Folder):
 
@@ -155,8 +161,8 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
     def get_list_ids(self):
         return [x['listid'] for x in self.get_list_information()]
 
-    @plone.memoize.ram.cache(lambda *args: time.time() // (60 * 60))
-    def get_list_information(self, listids=None):
+    @plone.memoize.ram.cache(_get_list_information_cachekey)
+    def get_list_information(self, listids=None, forcereload=False):
         idstolist = listids is not None and listids or 'all'
         result = []
         json = self.post_to_active_campaign(

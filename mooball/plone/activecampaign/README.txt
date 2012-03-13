@@ -24,8 +24,8 @@ We log in as a manager:
     which sets the api_url of the tool to a text file.
 
 
-Getting a list of Mailinglists
-------------------------------
+Listing Mailing Lists
+---------------------
 
 Getting a list of mailing lists invokes the ``list_list`` api action:
 
@@ -39,3 +39,17 @@ Once the administrator logs in, he can open the management interface:
 <!DOCTYPE ...
 ...Manage Mailing Lists...
 ...BD TEST LIST...
+
+
+Deleting Mailing Lists
+----------------------
+
+The overview can be used to delete mailing lists by selecting each which
+should be deleted:
+
+>>> set_api_url_to_action('list_delete_list')
+>>> browser.getControl(name='delete:list', index=0).value = ['2']
+>>> browser.getControl('Delete Selected').click()
+>>> print browser.contents
+<!DOCTYPE ...
+...Successfully deleted list(s)...

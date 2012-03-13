@@ -8,14 +8,16 @@
 
   <body>
 
-    <metal:content-core fill-slot="content">
+    <metal:content-core fill-slot="content-core">
       <h1 class="documentFirstHeading">Manage Mailing Lists</h1>
 
       <p>
         The following information is cached and may not reflect recent
         changes in the ActiveCampaign management interface.
       </p>
-      <form action=".">
+      <form action="."
+        tal:attributes="action string:${context/@@absolute_url}/managemailinglists"
+        >
         <table class="listing" tal:define="info context/get_list_information">
           <thead>
             <th></th>
@@ -27,8 +29,8 @@
           <tbody>
             <tr tal:repeat="item info">
               <td>
-                <input type="checkbox" name="delete"
-                  tal:attributes="value item/listid" />
+                <input type="checkbox" name="delete:list"
+                  tal:attributes="value string:${item/listid}" />
               </td>
               <td tal:content="item/name" />
               <td tal:content="item/subscribers" />
@@ -37,7 +39,7 @@
             </tr>
           </tbody>
         </table>
-        <input type="submit" name="delete" value="Delete Selected" />
+        <input type="submit" name="delete_selected" value="Delete Selected" />
       </form>
     </metal:content-core>
 
