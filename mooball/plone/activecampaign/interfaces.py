@@ -21,6 +21,9 @@ class IActiveCampaignTool(zope.interface.Interface):
         The given query is updated with the following data:
 
         api_user, api_pass, api_output='json'
+
+        :raises: ``ValueError`` if the response from the active
+                 campaign API call can not be decoded as json
         """
 
     def add_subscriber(subscriber, listids, custom_parameters):

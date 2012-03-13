@@ -85,6 +85,14 @@ class TestToolFudged(unittest.TestCase):
                 (self.tool.id, 'ERROR', result['result_message'])
             )
 
+    @fudge.patch('urllib2.urlopen')
+    def test_post_to_active_campaign_garbaged(self, urlopen):
+        result = "Garbage"
+        urlopen = self.fudgify(result, urlopen)
+
+        self.assertRaises(ValueError, self.tool.post_to_active_campaign,
+                          dict(api_action='api_action'))
+
 
 class TestTool(unittest.TestCase):
 

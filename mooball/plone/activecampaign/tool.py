@@ -113,8 +113,14 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         result = urllib2.urlopen(url, urllib.urlencode(query)).read()
         logger.info(result)
 
-        result = json.loads(result)
-        if result['result_code'] == 0:
+        try:
+            result = json.loads(result)
+            result_code = result.get('result_code')
+        except (AttributeError, ValueError):
+            raise ValueError('An error occured contacting the api. Only'
+                             ' garbage was received. This should not'
+                             ' happen: {0}'.format(result))
+        if result_code == 0:
             logger.error(result['result_message'])
         return result
 
