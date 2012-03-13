@@ -53,3 +53,12 @@ should be deleted:
 >>> print browser.contents
 <!DOCTYPE ...
 ...Successfully deleted list(s)...
+
+
+Custom Fields
+-------------
+
+We can click on a mailing list to add custom fields:
+
+>>> set_api_url_to_action('list_add')
+>>> browser.getControl('Delete Selected').click()

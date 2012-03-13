@@ -1,5 +1,6 @@
 from mooball.plone.activecampaign.interfaces import ACTIVE
 from mooball.plone.activecampaign.interfaces import IActiveCampaignField
+from mooball.plone.activecampaign.interfaces import IActiveCampaignList
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 import Globals
@@ -267,3 +268,32 @@ class ActiveCampaignField(object):
             IActiveCampaignField):
             result[fid] = field.get(self)
         return result
+
+
+class ActiveCampaignList(object):
+
+    zope.interface.implements(IActiveCampaignList)
+
+    listid = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignList['listid'])
+    name = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignList['name'])
+    cdate = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignList['cdate'])
+    subscribers = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignList['subscribers'])
+    campaigns = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignList['campaigns'])
+    emails = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignList['emails'])
+
+    @classmethod
+    def from_json(klass, jsonstr):
+        jsondata = json.loads(jsonstr)
+        mlist = klass()
+        for fid, field in zope.schema.getFieldsInOrder(
+            IActiveCampaignList):
+            value = jsondata.get(fid)
+            if value is not None:
+                setattr(mlist, fid, value)
+        return mlist

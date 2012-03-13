@@ -227,3 +227,40 @@ class IActiveCampaignField(zope.interface.Interface):
         Returns a dictionary of parameters retrieved from
         :class:`IActiveCampaignField` attributes.
         """
+
+
+class IActiveCampaignList(zope.interface.Interface):
+    """
+    An active campaign mailing list.
+    """
+
+    listid = zope.schema.TextLine(
+        title=u'List ID',
+    )
+
+    name = zope.schema.TextLine(
+        title=u'Title',
+    )
+
+    cdate = zope.schema.Datetime(
+        title=u'Created',
+    )
+
+    subscribers = zope.schema.TextLine(
+        title=u'Subscribers',
+    )
+
+    campaigns = zope.schema.TextLine(
+        title=u'Campaigns Sent',
+    )
+
+    emails = zope.schema.TextLine(
+        title=u'Emails Sent',
+    )
+
+    def from_json(jsondata):
+        """
+        Instantiates a mailing list object from provided jsondata.
+
+        :param jsondata: JSON encoded data
+        """
