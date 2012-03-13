@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from mooball.plone.activecampaign.testing import\
-        ACTIVECAMPAIGN_FUNCTIONAL_TESTING
+        ACTIVECAMPAIGN_INTEGRATION_TESTING
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 from plone.testing import layered
 import doctest
@@ -43,5 +43,5 @@ def test_suite():
         layered(doctest.DocFileSuite(
             'README.txt', package='mooball.plone.activecampaign',
             optionflags=OPTIONS, globs=GLOBS, setUp=tool_setUp),
-            layer=ACTIVECAMPAIGN_FUNCTIONAL_TESTING),
+            layer=ACTIVECAMPAIGN_INTEGRATION_TESTING),
         ])
