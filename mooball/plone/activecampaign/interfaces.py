@@ -133,6 +133,21 @@ class IActiveCampaignTool(zope.interface.Interface):
         The property name is: ``api_password``
         """
 
+    api_url = zope.schema.TextLine(
+        title=u'API URL',
+    )
+
+    api_user = zope.schema.TextLine(
+        title=u'API Username',
+    )
+
+    api_password = zope.schema.TextLine(
+        title=u'API Password',
+        description=(u'An API password to communicate with the API. The'
+                     ' password is stored in clear text and send in'
+                     ' clear text.')
+    )
+
 
 class IActiveCampaignSubscriber(zope.interface.Interface):
     """

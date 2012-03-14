@@ -2,8 +2,28 @@ from Products.statusmessages.interfaces import IStatusMessage
 from five import grok
 from mooball.plone.activecampaign.interfaces import IActiveCampaignList
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
+import plone.directives.form
+import z3c.form.field
 import zope.component
 import zope.publisher.interfaces
+
+
+class ManageTool(plone.directives.form.Form):
+    grok.require('cmf.ManagePortal')
+    grok.context(IActiveCampaignTool)
+    fields = z3c.form.field.Fields(IActiveCampaignTool)
+
+    @z3c.form.button.buttonAndHandler(u'Apply', name='apply')
+    def apply(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+        self.context.manage_changeProperties(**data)
+        IStatusMessage(self.request).addStatusMessage(
+            u'API Information changed.'
+        )
+        self.request.response.redirect(self.url())
 
 
 class ManageMailingLists(grok.View):

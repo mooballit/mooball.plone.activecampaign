@@ -24,6 +24,18 @@ We log in as a manager:
     which sets the api_url of the tool to a text file.
 
 
+Managing the Tool
+-----------------
+
+We can go to the site setup and add API information:
+
+>>> browser.open(portal_url + '/portal_activecampaign/@@managetool')
+>>> browser.getControl('API Username').value = 'roman'
+>>> browser.getControl('Apply').click()
+>>> print browser.contents
+<!DOCTYPE...
+...API Information changed...
+
 Listing Mailing Lists
 ---------------------
 
