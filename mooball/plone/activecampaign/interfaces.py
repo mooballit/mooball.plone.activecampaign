@@ -257,10 +257,3 @@ class IActiveCampaignList(zope.interface.Interface):
     emails = zope.schema.TextLine(
         title=u'Emails Sent',
     )
-
-    def from_json(jsondata):
-        """
-        Instantiates a mailing list object from provided jsondata.
-
-        :param jsondata: JSON encoded data
-        """

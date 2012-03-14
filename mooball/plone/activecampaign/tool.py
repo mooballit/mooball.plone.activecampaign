@@ -287,13 +287,6 @@ class ActiveCampaignList(object):
     emails = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignList['emails'])
 
-    @classmethod
-    def from_json(klass, jsonstr):
-        jsondata = json.loads(jsonstr)
-        mlist = klass()
-        for fid, field in zope.schema.getFieldsInOrder(
-            IActiveCampaignList):
-            value = jsondata.get(fid)
-            if value is not None:
-                setattr(mlist, fid, value)
-        return mlist
+    def __init__(self, **kw):
+        for key, val in kw.items():
+            setattr(self, key, val)
