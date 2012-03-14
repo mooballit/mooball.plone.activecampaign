@@ -32,6 +32,7 @@ setup(name='mooball.plone.activecampaign',
           'setuptools',
           'Products.CMFPlone',
           'plone.directives.form',
+          'z3c.traverser',
       ],
       entry_points="""
       # -*- Entry points: -*-

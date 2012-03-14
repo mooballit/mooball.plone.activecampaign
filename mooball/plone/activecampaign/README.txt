@@ -60,5 +60,7 @@ Custom Fields
 
 We can click on a mailing list to add custom fields:
 
->>> set_api_url_to_action('list_add')
->>> browser.getControl('Delete Selected').click()
+>>> browser.getLink('BD TEST LIST').click()
+>>> print browser.contents
+<!DOCTYPE ...
+...BD TEST LIST...

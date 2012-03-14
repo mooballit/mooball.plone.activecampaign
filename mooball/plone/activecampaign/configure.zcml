@@ -28,4 +28,6 @@
 
   <subscriber handler=".tool.after_tool_added" />
 
+  <include package=".browser" />
+
 </configure>

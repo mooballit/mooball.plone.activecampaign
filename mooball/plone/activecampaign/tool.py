@@ -271,7 +271,7 @@ class ActiveCampaignField(object):
         return result
 
 
-class ActiveCampaignList(object):
+class ActiveCampaignList(OFS.SimpleItem.SimpleItem):
 
     zope.interface.implements(IActiveCampaignList)
 

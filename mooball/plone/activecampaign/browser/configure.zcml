@@ -1,0 +1,18 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="nuw.types">
+
+  <adapter
+    factory="z3c.traverser.traverser.PluggableTraverser"
+    for="mooball.plone.activecampaign.interfaces.IActiveCampaignTool
+         zope.publisher.interfaces.IPublisherRequest"
+    />
+
+  <subscriber
+    factory=".manage.ListTraverser"
+    for="mooball.plone.activecampaign.interfaces.IActiveCampaignTool
+         zope.publisher.interfaces.IPublisherRequest"
+    provides="z3c.traverser.interfaces.ITraverserPlugin"
+    />
+
+</configure>
