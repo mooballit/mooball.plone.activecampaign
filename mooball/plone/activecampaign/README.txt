@@ -29,6 +29,7 @@ Managing the Tool
 
 We can go to the site setup and add API information:
 
+>>> browser.handleErrors = False
 >>> browser.open(portal_url)
 >>> browser.getLink('Site Setup').click()
 >>> browser.getLink('Active Campaign Setup').click()
@@ -53,10 +54,10 @@ Now we set up the tool by providing API information.
 >>> browser.getLink('fill in the API form').click()
 >>> browser.getControl('API Username').value = 'roman'
 >>> browser.getControl('API Password').value = 'secret'
->>> browser.getControl('Apply').click()
+>>> browser.getControl('Save').click()
 >>> print browser.contents
 <!DOCTYPE...
-...API Information changed...
+...Changes saved...
 
 Listing Mailing Lists
 ---------------------
@@ -64,6 +65,7 @@ Listing Mailing Lists
 After providing the API information, we can see mailing list information
 showing on the:
 
+>>> browser.getLink('Active Campaign Setup').click()
 >>> print browser.contents
 <!DOCTYPE ...
 ...Manage Mailing Lists...
@@ -79,9 +81,6 @@ should be deleted:
 >>> set_api_url_to_action('list_delete_list')
 >>> browser.getControl(name='delete:list', index=0).value = ['2']
 >>> browser.getControl('Delete Selected').click()
->>> print browser.contents
-<!DOCTYPE ...
-...Successfully deleted list(s)...
 
 
 Custom Fields

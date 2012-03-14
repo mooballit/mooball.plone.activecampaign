@@ -2,28 +2,24 @@ from Products.statusmessages.interfaces import IStatusMessage
 from five import grok
 from mooball.plone.activecampaign.interfaces import IActiveCampaignList
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
-import plone.directives.form
-import z3c.form.field
+from plone.app.controlpanel.form import ControlPanelForm
+from zope.app.form import CustomWidgetFactory
+from zope.app.form.browser.textwidgets import PasswordWidget
 import zope.component
+import zope.formlib.form
 import zope.publisher.interfaces
 
 
-class ManageTool(plone.directives.form.Form):
-    grok.require('cmf.ManagePortal')
-    grok.context(IActiveCampaignTool)
-    fields = z3c.form.field.Fields(IActiveCampaignTool)
+class ManageTool(ControlPanelForm):
+    form_name = "Active Campaign Settings"
+    description = "Tool Settings for Active Campaign API Tool"
+    form_fields = zope.formlib.form.FormFields(IActiveCampaignTool)
+    pass_widget = CustomWidgetFactory(PasswordWidget,
+                                      extra='autocomplete="off"')
+    form_fields['api_password'].custom_widget = pass_widget
 
-    @z3c.form.button.buttonAndHandler(u'Apply', name='apply')
-    def apply(self, action):
-        data, errors = self.extractData()
-        if errors:
-            self.status = self.formErrorsMessage
-            return
+    def _on_save(self, data):
         self.context.manage_changeProperties(**data)
-        IStatusMessage(self.request).addStatusMessage(
-            u'API Information changed.'
-        )
-        self.request.response.redirect(self.url(name='managemailinglists'))
 
 
 class ManageMailingLists(grok.View):

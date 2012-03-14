@@ -1,5 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="nuw.types">
 
   <adapter
@@ -13,6 +14,13 @@
     for="mooball.plone.activecampaign.interfaces.IActiveCampaignTool
          zope.publisher.interfaces.IPublisherRequest"
     provides="z3c.traverser.interfaces.ITraverserPlugin"
+    />
+
+  <browser:page
+    name="managetool"
+    for="mooball.plone.activecampaign.interfaces.IActiveCampaignTool"
+    class=".manage.ManageTool"
+    permission="cmf.ManagePortal"
     />
 
 </configure>
