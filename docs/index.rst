@@ -31,6 +31,12 @@ API
 .. automodule:: mooball.plone.activecampaign.tool
     :members:
 
+Errors
+------
+
+.. automodule:: mooball.plone.activecampaign.interfaces
+    :members:
+
 Indices and tables
 ==================
 

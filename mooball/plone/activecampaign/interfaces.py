@@ -8,6 +8,20 @@ ACTIVE = 1
 UNSUBSCRIBED = 2
 
 
+class APIUnauthorized(IOError):
+    """
+    Error which is raised if we get an Unauthorized error from the api.
+
+    This error very vague, as it is only specified by a string we
+    receive from the API and an error code which is always 0 by a
+    failure. This error is raised in :meth:`post_to_active_campaign`
+    if:
+
+        * the error code is 0 and
+        * ``not authorized`` as a substring of the error message
+    """
+
+
 class IActiveCampaignTool(zope.interface.Interface):
     """
     Interface to synchronise user data with with active campaign
@@ -25,6 +39,8 @@ class IActiveCampaignTool(zope.interface.Interface):
 
         :raises: ``ValueError`` if the response from the active
                  campaign API call can not be decoded as json
+        :raises: ``APIUnauthorized`` if the API can not be accessed due
+                 to wrong credentials.
         """
 
     def add_subscriber(subscriber, listids, custom_parameters):

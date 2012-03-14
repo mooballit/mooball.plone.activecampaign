@@ -1,6 +1,7 @@
 from mooball.plone.activecampaign.testing import\
         ACTIVECAMPAIGN_FUNCTIONAL_TESTING
 from Products.CMFCore.utils import getToolByName
+from mooball.plone.activecampaign.interfaces import APIUnauthorized
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 from mooball.plone.activecampaign.tool import ActiveCampaignSubscriber
@@ -116,6 +117,17 @@ class TestToolFudged(unittest.TestCase):
         urlopen = self.fudgify(result, urlopen)
 
         self.assertRaises(ValueError, self.tool.post_to_active_campaign,
+                          dict(api_action='api_action'))
+
+    @fudge.patch('urllib2.urlopen')
+    def test_post_to_active_unauthorized(self, urlopen):
+        urlopen = self.fudgify(
+            dict(result_code=0,
+                 result_message='You are not authorized to access this file',
+                 result_output='json'), urlopen)
+
+        self.assertRaises(APIUnauthorized,
+                          self.tool.post_to_active_campaign,
                           dict(api_action='api_action'))
 
 

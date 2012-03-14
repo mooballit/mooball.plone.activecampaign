@@ -1,4 +1,5 @@
 from mooball.plone.activecampaign.interfaces import ACTIVE
+from mooball.plone.activecampaign.interfaces import APIUnauthorized
 from mooball.plone.activecampaign.interfaces import IActiveCampaignField
 from mooball.plone.activecampaign.interfaces import IActiveCampaignList
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
@@ -100,13 +101,6 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
             self.post_to_active_campaign(params)
 
     def post_to_active_campaign(self, query):
-        """
-        Performs the actual post to active campaign and check the
-        response.
-
-        :raises: `AssertionError` if the
-                 :meth:`get_api_url` returns an empty string.
-        """
         logger = logging.getLogger(self.id)
         url = self.get_api_url()
         assert url
@@ -130,6 +124,16 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
             raise ValueError('An error occured contacting the api. Only'
                              ' garbage was received. This should not'
                              ' happen: {0}'.format(result))
+        if (result_code == 0 and 'not authorized' in
+            result['result_message']):
+            result.update(api_url=self.get_api_url(),
+                          api_username=self.get_api_username(),
+                          api_password=self.get_api_password())
+            msg = ('{result_message} Perhaps you were providing the'
+                   ' wrong credentials and API URL? URL: {api_url},'
+                   ' api_username: {api_username}, api_password:'
+                   ' {api_password}'.format(**result))
+            raise APIUnauthorized(msg)
         if result_code == 0:
             logger.error(result['result_message'])
         return result
