@@ -7,6 +7,7 @@ import Globals
 import OFS.Folder
 import OFS.SimpleItem
 import Products.CMFCore.utils
+import datetime
 import json
 import logging
 import plone.memoize.ram
@@ -287,6 +288,10 @@ class ActiveCampaignList(object):
     emails = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignList['emails'])
 
+    _dateformat = '%Y-%m-%d %H:%M:%S'
+
     def __init__(self, **kw):
         for key, val in kw.items():
+            if key == 'cdate':
+                val = datetime.datetime.strptime(val, self._dateformat)
             setattr(self, key, val)
