@@ -11,39 +11,46 @@
     <metal:content-core fill-slot="content-core">
       <h1 class="documentFirstHeading">Manage Mailing Lists</h1>
 
-      <p>
-        The following information is cached and may not reflect recent
-        changes in the ActiveCampaign management interface.
+      <p tal:condition="not:view/provides_api_information">
+        The active campaign tool is not correctly set up. Please
+        <a tal:attributes="href
+          context/@@managetool/@@absolute_url">fill in the API form</a> for an initial setup.
       </p>
-      <form action="."
-        tal:attributes="action string:${context/@@absolute_url}/managemailinglists"
-        >
-        <table class="listing" tal:define="info context/get_list_information">
-          <thead>
-            <th></th>
-            <th>Name</th>
-            <th>Subscribers</th>
-            <th>Campaigns Sent</th>
-            <th>Emails Sent</th>
-          </thead>
-          <tbody>
-            <tr tal:repeat="item info">
-              <td>
-                <input type="checkbox" name="delete:list"
-                  tal:attributes="value string:${item/listid}" />
-              </td>
-              <td>
-                <a tal:attributes="href string:${context/@@absolute_url}/${item/listid}/@@managelist"
-                  tal:content="item/name" />
-              </td>
-              <td tal:content="item/subscribers" />
-              <td tal:content="item/campaigns" />
-              <td tal:content="item/emails" />
-            </tr>
-          </tbody>
-        </table>
-        <input type="submit" name="delete_selected" value="Delete Selected" />
-      </form>
+      <span tal:omit-tag="" tal:condition="view/provides_api_information">
+        <p>
+          The following information is cached and may not reflect recent
+          changes in the ActiveCampaign management interface.
+        </p>
+        <form action="."
+          tal:attributes="action string:${context/@@absolute_url}/managemailinglists"
+          >
+          <table class="listing" tal:define="info context/get_list_information">
+            <thead>
+              <th></th>
+              <th>Name</th>
+              <th>Subscribers</th>
+              <th>Campaigns Sent</th>
+              <th>Emails Sent</th>
+            </thead>
+            <tbody>
+              <tr tal:repeat="item info">
+                <td>
+                  <input type="checkbox" name="delete:list"
+                    tal:attributes="value string:${item/listid}" />
+                </td>
+                <td>
+                  <a tal:attributes="href string:${context/@@absolute_url}/${item/listid}/@@managelist"
+                    tal:content="item/name" />
+                </td>
+                <td tal:content="item/subscribers" />
+                <td tal:content="item/campaigns" />
+                <td tal:content="item/emails" />
+              </tr>
+            </tbody>
+          </table>
+          <input type="submit" name="delete_selected" value="Delete Selected" />
+        </form>
+      </span>
     </metal:content-core>
 
   </body>

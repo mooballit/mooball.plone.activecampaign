@@ -23,7 +23,7 @@ class ManageTool(plone.directives.form.Form):
         IStatusMessage(self.request).addStatusMessage(
             u'API Information changed.'
         )
-        self.request.response.redirect(self.url())
+        self.request.response.redirect(self.url(name='managemailinglists'))
 
 
 class ManageMailingLists(grok.View):
@@ -34,6 +34,15 @@ class ManageMailingLists(grok.View):
         if 'delete' in self.request.form.keys():
             self.delete_lists()
         return super(ManageMailingLists, self).__call__()
+
+    def provides_api_information(self):
+        """
+        Returns True if api_url, api_username and api_password are set
+        and therefore an API call can be made.
+        """
+        return (self.context.get_api_url() and
+                self.context.get_api_username() and
+                self.context.get_api_password())
 
     def delete_lists(self):
         if self.context.delete_lists(self.request.form['delete']):

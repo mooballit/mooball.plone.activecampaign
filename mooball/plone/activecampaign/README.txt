@@ -29,8 +29,30 @@ Managing the Tool
 
 We can go to the site setup and add API information:
 
->>> browser.open(portal_url + '/portal_activecampaign/@@managetool')
+>>> browser.open(portal_url)
+>>> browser.getLink('Site Setup').click()
+>>> browser.getLink('Active Campaign Setup').click()
+
+Because the tool is not setup with any API information, we need to fill
+out the management form first in order to retrieve any information:
+
+>>> print browser.contents
+<!DOCTYPE...
+...The active campaign tool is not correctly set up...
+
+Now we set up the tool by providing API information.
+
+..  note::
+
+    The information provided here is obviously only test information.
+    You need to provide API details from campaign monitor. Esp. the API
+    URL needs to be set to a server response with a helper method, so we
+    fill only username and password.
+
+>>> set_api_url_to_action('list_list')
+>>> browser.getLink('fill in the API form').click()
 >>> browser.getControl('API Username').value = 'roman'
+>>> browser.getControl('API Password').value = 'secret'
 >>> browser.getControl('Apply').click()
 >>> print browser.contents
 <!DOCTYPE...
@@ -39,14 +61,9 @@ We can go to the site setup and add API information:
 Listing Mailing Lists
 ---------------------
 
-Getting a list of mailing lists invokes the ``list_list`` api action:
+After providing the API information, we can see mailing list information
+showing on the:
 
->>> set_api_url_to_action('list_list')
-
-Once the administrator logs in, he can open the management interface:
-
->>> browser.handleErrors = False
->>> browser.open(portal_url + '/portal_activecampaign/@@managemailinglists')
 >>> print browser.contents
 <!DOCTYPE ...
 ...Manage Mailing Lists...

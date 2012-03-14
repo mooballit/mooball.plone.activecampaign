@@ -30,18 +30,10 @@ OPTIONS = (doctest.REPORT_ONLY_FIRST_FAILURE |
            doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
 
 
-def tool_setUp(context):
-    tool = zope.component.getUtility(IActiveCampaignTool)
-    tool.manage_changeProperties(api_url='file:///tmp/test.json',
-                                 api_username='roman',
-                                 api_password='secret')
-    transaction.commit()
-
-
 def test_suite():
     return unittest.TestSuite([
         layered(doctest.DocFileSuite(
             'README.txt', package='mooball.plone.activecampaign',
-            optionflags=OPTIONS, globs=GLOBS, setUp=tool_setUp),
+            optionflags=OPTIONS, globs=GLOBS),
             layer=ACTIVECAMPAIGN_INTEGRATION_TESTING),
         ])
