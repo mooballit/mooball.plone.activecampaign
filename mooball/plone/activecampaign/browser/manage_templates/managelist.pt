@@ -11,16 +11,27 @@
     <metal:content-core fill-slot="content">
       <h1 class="documentFirstHeading" tal:content="context/name">BD Test</h1>
 
-      <h3>Custom Fields</h3>
       <dl>
-        <tal:fields repeat="field context/fields">
-          <dt>
-            <span tal:replace="field/title" />
-            <span tal:condition="field/req">*</span>
-          </dt>
-          <dd tal:content="field/fieldtype" />
-        </tal:fields>
+        <dt>Listid</dt>
+        <dd tal:content="context/listid" />
+        <dt>Created</dt>
+        <dd tal:content="context/cdate" />
+        <dt>Subscribers</dt>
+        <dd tal:content="context/subscribers" />
+        <dt>Campaigns Sent</dt>
+        <dd tal:content="context/campaigns" />
+        <dt>Emails Sent</dt>
+        <dd tal:content="context/emails" />
       </dl>
+
+      <h3>Custom Fields</h3>
+      <ul>
+        <li tal:repeat="field context/fields">
+          <span tal:replace="field/title" />
+          <span tal:condition="field/req">*</span>
+          (<span tal:content="field/fieldtype" />)
+        </li>
+      </ul>
     </metal:content-core>
 
   </body>
