@@ -25,6 +25,9 @@ API
 .. autointerface:: mooball.plone.activecampaign.interfaces.IActiveCampaignField
     :members:
 
+.. autointerface:: mooball.plone.activecampaign.interfaces.IActiveCampaignList
+    :members:
+
 .. automodule:: mooball.plone.activecampaign.tool
     :members:
 
