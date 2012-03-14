@@ -12,7 +12,7 @@ import zope.component
 
 def debug_contents(browsercontents):
     with open('/tmp/debug.html', 'w') as f:
-        f.write()
+        f.write(browsercontents)
 
 
 def set_api_url_to_action(api_action):
