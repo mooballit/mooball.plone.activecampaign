@@ -29,9 +29,10 @@ setup(name='mooball.plone.activecampaign',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
           'Products.CMFPlone',
+          'plone.app.z3cform',
           'plone.directives.form',
+          'setuptools',
           'z3c.traverser',
       ],
       entry_points="""
