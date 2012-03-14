@@ -161,7 +161,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         return dict(zip(self.format_url_keys(name, keys), values))
 
     def get_list_ids(self):
-        return [x['listid'] for x in self.get_list_information()]
+        return [x.listid for x in self.get_list_information()]
 
     @plone.memoize.ram.cache(_get_list_information_cachekey)
     def get_list_information(self, listids=None, forcereload=False):
@@ -176,7 +176,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         del json['result_output']
         del json['result_message']
         for k in json.keys():
-            result.append(json[k])
+            result.append(ActiveCampaignList(**json[k]))
         return result
 
     def get_api_url(self):

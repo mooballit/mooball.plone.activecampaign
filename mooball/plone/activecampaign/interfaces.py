@@ -108,7 +108,7 @@ class IActiveCampaignTool(zope.interface.Interface):
         This method is heavily cached (for 1h). The information could be
         outdated.
 
-        :rtype: List of dictionaries.
+        :rtype: List of :class:`IActiveCampaignList` provided objects.
         """
 
     def get_api_url():
