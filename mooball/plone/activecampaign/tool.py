@@ -270,6 +270,19 @@ class ActiveCampaignField(object):
             result[fid] = field.get(self)
         return result
 
+    @property
+    def fieldtype(self):
+        result = None
+        vocab = zope.component.getUtility(
+            zope.schema.interfaces.IVocabularyFactory,
+            name=u'Field Types')(self)
+        try:
+            term = vocab.getTermByToken(self.type)
+            result = term.title
+        except LookupError:
+            pass
+        return result
+
 
 class ActiveCampaignList(OFS.SimpleItem.SimpleItem):
 

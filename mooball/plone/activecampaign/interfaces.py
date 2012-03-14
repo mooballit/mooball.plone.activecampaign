@@ -1,5 +1,6 @@
 import zope.interface
 import zope.schema
+import zope.schema.vocabulary
 
 
 UNCONFIRMED = 0
@@ -166,18 +167,20 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
     )
 
 
-field_types_vocab = zope.schema.vocabulary.SimpleVocabulary(
-    [zope.schema.vocabulary.SimpleTerm(title=u'Field', value=u'1'),
-     zope.schema.vocabulary.SimpleTerm(title=u'Text Box', value=u'2'),
-     zope.schema.vocabulary.SimpleTerm(title=u'Checkbox', value=u'3'),
-     zope.schema.vocabulary.SimpleTerm(title=u'Radio', value=u'4'),
-     zope.schema.vocabulary.SimpleTerm(title=u'Dropdown', value=u'5'),
-     zope.schema.vocabulary.SimpleTerm(title=u'Hidden field', value=u'6'),
-     zope.schema.vocabulary.SimpleTerm(title=u'List Box', value=u'7'),
-     zope.schema.vocabulary.SimpleTerm(title=u'Checkbox Group', value=u'8'),
-     zope.schema.vocabulary.SimpleTerm(title=u'Date', value=u'9'),
-    ]
-)
+def field_type_vocab(context):
+    return zope.schema.vocabulary.SimpleVocabulary(
+        [zope.schema.vocabulary.SimpleTerm(title=u'Field', value=u'1'),
+         zope.schema.vocabulary.SimpleTerm(title=u'Text Box', value=u'2'),
+         zope.schema.vocabulary.SimpleTerm(title=u'Checkbox', value=u'3'),
+         zope.schema.vocabulary.SimpleTerm(title=u'Radio', value=u'4'),
+         zope.schema.vocabulary.SimpleTerm(title=u'Dropdown', value=u'5'),
+         zope.schema.vocabulary.SimpleTerm(title=u'Hidden field', value=u'6'),
+         zope.schema.vocabulary.SimpleTerm(title=u'List Box', value=u'7'),
+         zope.schema.vocabulary.SimpleTerm(title=u'Checkbox Group',
+                                           value=u'8'),
+         zope.schema.vocabulary.SimpleTerm(title=u'Date', value=u'9'),
+        ]
+    )
 
 
 class IActiveCampaignField(zope.interface.Interface):
@@ -192,7 +195,7 @@ class IActiveCampaignField(zope.interface.Interface):
 
     type = zope.schema.Choice(
         title=u'Field Type',
-        vocabulary=field_types_vocab,
+        vocabulary='Field Types',
     )
 
     req = zope.schema.TextLine(
@@ -225,6 +228,9 @@ class IActiveCampaignField(zope.interface.Interface):
         description=u'Unique tag used as a placeholder for dynamic content',
         default=u'',
     )
+
+    fieldtype = zope.interface.Attribute(
+        'Human readable field type, e.g.: Checkbox')
 
     def get_parameters():
         """

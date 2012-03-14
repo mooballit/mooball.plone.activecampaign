@@ -11,9 +11,16 @@
     <metal:content-core fill-slot="content">
       <h1 class="documentFirstHeading" tal:content="context/name">BD Test</h1>
 
-      <p>
-      Mailing list information here
-    </p>
+      <h3>Custom Fields</h3>
+      <dl>
+        <tal:fields repeat="field context/fields">
+          <dt>
+            <span tal:replace="field/title" />
+            <span tal:condition="field/req">*</span>
+          </dt>
+          <dd tal:content="field/fieldtype" />
+        </tal:fields>
+      </dl>
     </metal:content-core>
 
   </body>

@@ -26,8 +26,13 @@
 
   <grok:grok package="." />
 
-  <subscriber handler=".tool.after_tool_added" />
-
   <include package=".browser" />
+
+  <subscriber handler=".tool.after_tool_added" />
+  <utility
+    component=".interfaces.field_type_vocab"
+    name="Field Types"
+    provides="zope.schema.interfaces.IVocabularyFactory"
+    />
 
 </configure>

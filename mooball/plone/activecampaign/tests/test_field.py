@@ -1,10 +1,15 @@
+from mooball.plone.activecampaign.testing import\
+        ACTIVECAMPAIGN_FUNCTIONAL_TESTING
 from mooball.plone.activecampaign.interfaces import IActiveCampaignField
 from mooball.plone.activecampaign.tool import ActiveCampaignField
 import unittest
 import zope.interface
+import zope.schema.interfaces
 
 
 class TestFieldUnit(unittest.TestCase):
+
+    layer = ACTIVECAMPAIGN_FUNCTIONAL_TESTING
 
     def test_interfaces(self):
         self.assertTrue(
