@@ -287,11 +287,27 @@ class ActiveCampaignList(OFS.SimpleItem.SimpleItem):
         IActiveCampaignList['campaigns'])
     emails = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignList['emails'])
+    fields = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignList['fields'])
 
     _dateformat = '%Y-%m-%d %H:%M:%S'
 
     def __init__(self, **kw):
-        for key, val in kw.items():
-            if key == 'cdate':
+        for fid, field in zope.schema.getFieldsInOrder(
+            IActiveCampaignList):
+            val = kw.get(fid)
+            if val is None:
+                continue
+            if fid == 'cdate':
                 val = datetime.datetime.strptime(val, self._dateformat)
-            setattr(self, key, val)
+            if fid == 'fields':
+                val = self.convert_fields(val)
+            setattr(self, fid, val)
+
+    def convert_fields(self, fielddata):
+        result = []
+        for data in fielddata:
+            field = ActiveCampaignField(**data)
+            result.append(field)
+        return result
+

@@ -166,6 +166,20 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
     )
 
 
+field_types_vocab = zope.schema.vocabulary.SimpleVocabulary(
+    [zope.schema.vocabulary.SimpleTerm(title=u'Field', value=u'1'),
+     zope.schema.vocabulary.SimpleTerm(title=u'Text Box', value=u'2'),
+     zope.schema.vocabulary.SimpleTerm(title=u'Checkbox', value=u'3'),
+     zope.schema.vocabulary.SimpleTerm(title=u'Radio', value=u'4'),
+     zope.schema.vocabulary.SimpleTerm(title=u'Dropdown', value=u'5'),
+     zope.schema.vocabulary.SimpleTerm(title=u'Hidden field', value=u'6'),
+     zope.schema.vocabulary.SimpleTerm(title=u'List Box', value=u'7'),
+     zope.schema.vocabulary.SimpleTerm(title=u'Checkbox Group', value=u'8'),
+     zope.schema.vocabulary.SimpleTerm(title=u'Date', value=u'9'),
+    ]
+)
+
+
 class IActiveCampaignField(zope.interface.Interface):
     """
     A field definition for an active campaigin mailing list field.
@@ -178,20 +192,10 @@ class IActiveCampaignField(zope.interface.Interface):
 
     type = zope.schema.Choice(
         title=u'Field Type',
-        values=[
-            u'Text Field',
-            u'Text Box',
-            u'Checkbox',
-            u'Radio',
-            u'Dropdown',
-            u'Hidden field',
-            u'List Box',
-            u'Checkbox Group',
-            u'Date',
-        ]
+        vocabulary=field_types_vocab,
     )
 
-    req = zope.schema.Bool(
+    req = zope.schema.TextLine(
         title=u'Required Field?',
     )
 
@@ -205,15 +209,15 @@ class IActiveCampaignField(zope.interface.Interface):
 
     label = zope.schema.Choice(
         title=u'Label Position',
-        values=[1, 0],
-        default=1,
+        values=['1', '0'],
+        default='1',
     )
 
     show_in_list = zope.schema.Choice(
         title=u'Show on list page?',
         description=u'Show on subscriber list page (as another column)?',
-        values=[1, 0],
-        default=1,
+        values=['1', '0'],
+        default='1',
     )
 
     perstag = zope.schema.TextLine(
@@ -256,4 +260,9 @@ class IActiveCampaignList(zope.interface.Interface):
 
     emails = zope.schema.TextLine(
         title=u'Emails Sent',
+    )
+
+    fields = zope.schema.List(
+        title=u'Fields',
+        required=False,
     )
