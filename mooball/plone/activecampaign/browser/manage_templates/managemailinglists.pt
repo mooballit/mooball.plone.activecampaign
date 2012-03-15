@@ -21,10 +21,13 @@
           The following information is cached and may not reflect recent
           changes in the ActiveCampaign management interface.
         </p>
+        <form tal:replace="structure view/searchform/render"
+          tal:condition="view/searchform | nothing" />
+
         <form action="."
           tal:attributes="action string:${context/@@absolute_url}/managemailinglists"
           >
-          <table class="listing" tal:define="info context/get_list_information">
+          <table class="listing" tal:define="info view/mlists">
             <thead>
               <th></th>
               <th>Name</th>

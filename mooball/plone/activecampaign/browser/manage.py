@@ -3,11 +3,14 @@ from five import grok
 from mooball.plone.activecampaign.interfaces import APIUnauthorized
 from mooball.plone.activecampaign.interfaces import IActiveCampaignList
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
+from mooball.plone.activecampaign.tool import ActiveCampaignSubscriber
 from plone.app.controlpanel.events import ConfigurationChangedEvent
 from plone.app.controlpanel.form import ControlPanelForm
 from zope.app.form import CustomWidgetFactory
 from zope.app.form.browser.textwidgets import PasswordWidget
+import plone.directives.form
 import plone.protect
+import z3c.form.field
 import zope.component
 import zope.event
 import zope.formlib.form
@@ -36,14 +39,52 @@ class ManageTool(ControlPanelForm):
         self.status = "Changes saved."
 
 
+class ISearchSubscribers(zope.interface.Interface):
+
+    searchTerm = zope.schema.TextLine(
+        title=u'Email',
+        description=u'Find mailing lists which contain given email',
+        required=False,
+    )
+
+
+class SearchSubscribers(plone.directives.form.Form):
+    grok.require('cmf.ManagePortal')
+    grok.context(IActiveCampaignTool)
+    ignoreContext = True
+    fields = z3c.form.field.Fields(ISearchSubscribers)
+    mlists = None
+
+    @z3c.form.button.buttonAndHandler(u'Search', name='search')
+    def search(self, action):
+        data, errors = self.extractData()
+        mlists = self.context.get_lists_by(
+            ActiveCampaignSubscriber(email=data['searchTerm']))
+        if errors:
+            self.status = self.formErrorsMessage
+        if not mlists:
+            self.status = u'No mailing lists found'
+        else:
+            self.mlists = mlists
+
+
 class ManageMailingLists(grok.View):
     grok.context(IActiveCampaignTool)
     grok.require('cmf.ManagePortal')
+    mlists = None
 
     def __call__(self):
+        self.searchform = SearchSubscribers(self.context, self.request)
+        self.searchform.update()
         if 'delete' in self.request.form.keys():
             self.delete_lists()
         return super(ManageMailingLists, self).__call__()
+
+    def update(self):
+        if self.provides_api_information():
+            self.mlists = (self.searchform.mlists and
+                           self.searchform.mlists or
+                           self.context.get_list_information())
 
     def provides_api_information(self):
         """

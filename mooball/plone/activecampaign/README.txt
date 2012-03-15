@@ -90,6 +90,20 @@ showing on the:
 ...BD TEST LIST...
 
 
+Filtering Mailing Lists by Email
+--------------------------------
+
+It is possible to filter the mailing lists by e-mail:
+
+>>> set_api_url_to_action('subscriber_view_email')
+>>> browser.getControl('Email').value = 'tom@mooball.com'
+>>> browser.getControl('Search', index=2).click()
+>>> print browser.contents
+<!DOCTYPE ...
+...Manage Mailing Lists...
+...Media NZ...
+
+
 Deleting Mailing Lists
 ----------------------
 

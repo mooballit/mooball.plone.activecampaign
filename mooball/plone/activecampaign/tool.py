@@ -120,10 +120,11 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         try:
             result = json.loads(result)
             result_code = result.get('result_code')
-        except (AttributeError, ValueError):
+        except (AttributeError, ValueError), err:
             raise ValueError('An error occured contacting the api. Only'
                              ' garbage was received. This should not'
-                             ' happen: {0}'.format(result))
+                             ' happen: {error} - {0}'.format(
+                                 result, error=err))
         if (result_code == 0 and 'not authorized' in
             result['result_message']):
             result.update(api_url=self.get_api_url(),
