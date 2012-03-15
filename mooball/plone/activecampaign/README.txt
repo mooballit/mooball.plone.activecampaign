@@ -50,9 +50,27 @@ Now we set up the tool by providing API information.
     URL needs to be set to a server response with a helper method, so we
     fill only username and password.
 
->>> set_api_url_to_action('list_list')
+>>> set_api_url_to_action('api_unauthorized')
 >>> browser.getLink('fill in the API form').click()
 >>> browser.getControl('API Username').value = 'roman'
+>>> browser.getControl('API Password').value = 'secr'
+>>> browser.getControl('Save').click()
+
+We made a mistake in the credentials form and provided a wrong password.
+We can go back and ammend the mistake:
+
+>>> print browser.contents
+<!DOCTYPE...
+...Error...
+...You are not authorized to access this file...
+
+We set the API URL to return and list mailing lists:
+
+>>> set_api_url_to_action('list_list')
+
+Reload the form and provide the correct credentials:
+
+>>> browser.open(portal_url + '/portal_activecampaign/managetool')
 >>> browser.getControl('API Password').value = 'secret'
 >>> browser.getControl('Save').click()
 >>> print browser.contents

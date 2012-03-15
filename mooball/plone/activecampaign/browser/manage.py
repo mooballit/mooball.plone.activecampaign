@@ -1,11 +1,15 @@
 from Products.statusmessages.interfaces import IStatusMessage
 from five import grok
+from mooball.plone.activecampaign.interfaces import APIUnauthorized
 from mooball.plone.activecampaign.interfaces import IActiveCampaignList
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
+from plone.app.controlpanel.events import ConfigurationChangedEvent
 from plone.app.controlpanel.form import ControlPanelForm
 from zope.app.form import CustomWidgetFactory
 from zope.app.form.browser.textwidgets import PasswordWidget
+import plone.protect
 import zope.component
+import zope.event
 import zope.formlib.form
 import zope.publisher.interfaces
 
@@ -18,8 +22,18 @@ class ManageTool(ControlPanelForm):
                                       extra='autocomplete="off"')
     form_fields['api_password'].custom_widget = pass_widget
 
-    def _on_save(self, data):
+    @zope.formlib.form.action(u'Save', name=u'save')
+    def handle_edit_action(self, action, data):
+        plone.protect.CheckAuthenticator(self.request)
         self.context.manage_changeProperties(**data)
+        try:
+            self.context.get_list_information()
+        except APIUnauthorized, err:
+            IStatusMessage(self.request).addStatusMessage(err,
+                                                          type='error')
+            return
+        zope.event.notify(ConfigurationChangedEvent(self, data))
+        self.status = "Changes saved."
 
 
 class ManageMailingLists(grok.View):

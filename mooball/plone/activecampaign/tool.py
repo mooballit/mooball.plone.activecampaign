@@ -129,10 +129,9 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
             result.update(api_url=self.get_api_url(),
                           api_username=self.get_api_username(),
                           api_password=self.get_api_password())
-            msg = ('{result_message} Perhaps you were providing the'
+            msg = ('{result_message}. Perhaps you were providing the'
                    ' wrong credentials and API URL? URL: {api_url},'
-                   ' api_username: {api_username}, api_password:'
-                   ' {api_password}'.format(**result))
+                   ' api_username: {api_username}'.format(**result))
             raise APIUnauthorized(msg)
         if result_code == 0:
             logger.error(result['result_message'])
