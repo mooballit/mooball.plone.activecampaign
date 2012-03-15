@@ -20,7 +20,7 @@ import zope.interface
 import zope.schema
 
 
-def _get_list_information_cachekey(method, listids=None,
+def _get_list_information_cachekey(method, tool, listids=None,
                                    forcereload=False):
     cachekey = forcereload and 1 or time.time() // (60 * 60)
     return cachekey
@@ -169,7 +169,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
     @plone.memoize.ram.cache(_get_list_information_cachekey)
     def get_list_information(self, listids=None, forcereload=False):
-        idstolist = listids is not None and listids or 'all'
+        idstolist = listids is not None and ','.join(listids) or 'all'
         result = []
         json = self.post_to_active_campaign(
             dict(api_action='list_list',
@@ -197,10 +197,13 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
                       email=email)
         result = self.post_to_active_campaign(params)
         if result['result_code'] == 1:
+            if result['lists']:
+                lists = self.get_list_information(
+                    listids=result['lists'].keys())
             return ActiveCampaignSubscriber(
                 result['email'], result['first_name'],
                 result['last_name'], sid=result['id'],
-                lists=result['lists'],
+                lists=lists
             )
 
     def get_lists_by(self, subscriber):
@@ -249,27 +252,7 @@ class ActiveCampaignSubscriber(object):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
-        if lists is not None:
-            self.convert_listdata(lists)
-
-    def convert_listdata(self, listdata):
-        result = []
-        for key in listdata.keys():
-            # XXX not sure here - either we use this incomplete data to
-            # create the list or perform another lookup on the listid
-            ldata = listdata[key]
-            mapped_data = dict(
-                listid=ldata['id'],
-                name=ldata['listname'],
-                subscribers=u'',
-                campaigns=u'',
-                emails=u'',
-            )
-            result.append(
-                ActiveCampaignList(**mapped_data)
-            )
-        if result:
-            self.lists = result
+        self.lists = lists
 
 
 class ActiveCampaignField(object):

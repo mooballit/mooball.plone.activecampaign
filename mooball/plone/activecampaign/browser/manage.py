@@ -66,6 +66,7 @@ class SearchSubscribers(plone.directives.form.Form):
             self.status = u'No mailing lists found'
         else:
             self.mlists = mlists
+            self.request.response.redirect(self.url(name='managemailinglists'))
 
 
 class ManageMailingLists(grok.View):
@@ -74,13 +75,13 @@ class ManageMailingLists(grok.View):
     mlists = None
 
     def __call__(self):
-        self.searchform = SearchSubscribers(self.context, self.request)
-        self.searchform.update()
         if 'delete' in self.request.form.keys():
             self.delete_lists()
         return super(ManageMailingLists, self).__call__()
 
     def update(self):
+        self.searchform = SearchSubscribers(self.context, self.request)
+        self.searchform.update()
         if self.provides_api_information():
             self.mlists = (self.searchform.mlists and
                            self.searchform.mlists or

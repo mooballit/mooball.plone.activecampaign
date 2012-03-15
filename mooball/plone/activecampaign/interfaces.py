@@ -128,13 +128,15 @@ class IActiveCampaignTool(zope.interface.Interface):
         :rtype: list of ids
         """
 
-    def get_list_information():
+    def get_list_information(listids=None):
         """
         Returns information associated with each mailing list.
 
         This method is heavily cached (for 1h). The information could be
         outdated.
 
+        :param listids: Can be given a list of listids which are
+                        strings. Optional.
         :rtype: List of :class:`IActiveCampaignList` provided objects.
         """
 
