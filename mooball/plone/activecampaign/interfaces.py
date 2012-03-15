@@ -111,6 +111,16 @@ class IActiveCampaignTool(zope.interface.Interface):
         :rtype: subscriber or None if the subscriber can not be found.
         """
 
+    def get_lists_by(subscriber):
+        """
+        Returns objects providing :class:`IActiveCampaignList` if the
+        given subscriber is subscribed to a mailing list. If not, an
+        empty list is returned.
+
+        :param subscriber: Object providing :class:`IActiveCampaignSubscriber`
+        :rtype: List of objects
+        """
+
     def get_list_ids():
         """
         Returns all ids of available mailing lists.
@@ -194,6 +204,11 @@ class IActiveCampaignSubscriber(zope.interface.Interface):
 
     sid = zope.schema.ASCIILine(
         title=u'Subscriber ID',
+        required=False,
+    )
+
+    lists = zope.schema.List(
+        title=u'Subscribed Lists',
         required=False,
     )
 

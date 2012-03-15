@@ -11,6 +11,7 @@ import fudge
 import fudge.inspector
 import json
 import logging
+import os.path
 import testfixtures
 import unittest
 import zope.interface
@@ -129,6 +130,17 @@ class TestToolFudged(unittest.TestCase):
         self.assertRaises(APIUnauthorized,
                           self.tool.post_to_active_campaign,
                           dict(api_action='api_action'))
+
+    @fudge.patch('urllib2.urlopen')
+    def test_get_lists_by(self, urlopen):
+        resultfilep = os.path.join(
+            os.path.dirname(__file__), 'testdata', 'get_lists_by.json')
+        jsondata = json.load(open(resultfilep, 'r'))
+        urlopen = self.fudgify(jsondata, urlopen)
+
+        subscriber = ActiveCampaignSubscriber(email=u'roman@mooball.net')
+        result = self.tool.get_lists_by(subscriber)
+        self.assertEqual(3, len(result))
 
 
 class TestTool(unittest.TestCase):

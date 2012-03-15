@@ -198,8 +198,14 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         if result['result_code'] == 1:
             return ActiveCampaignSubscriber(
                 result['email'], result['first_name'],
-                result['last_name'], sid=result['id']
+                result['last_name'], sid=result['id'],
+                lists=result['lists'],
             )
+
+    def get_lists_by(self, subscriber):
+        subscriber = self.get_subscriber_by(subscriber.email)
+        if subscriber is not None:
+            return subscriber.lists
 
 
 Globals.InitializeClass(ActiveCampaignTool)
@@ -233,12 +239,36 @@ class ActiveCampaignSubscriber(object):
         IActiveCampaignSubscriber['first_name'])
     last_name = zope.schema.fieldproperty.FieldProperty(
         IActiveCampaignSubscriber['last_name'])
+    lists = zope.schema.fieldproperty.FieldProperty(
+        IActiveCampaignSubscriber['lists'])
 
-    def __init__(self, email, first_name=u'', last_name=u'', sid='0'):
+    def __init__(self, email, first_name=u'', last_name=u'', sid='0',
+                 lists=None):
         self.sid = str(sid)
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
+        if lists is not None:
+            self.convert_listdata(lists)
+
+    def convert_listdata(self, listdata):
+        result = []
+        for key in listdata.keys():
+            # XXX not sure here - either we use this incomplete data to
+            # create the list or perform another lookup on the listid
+            ldata = listdata[key]
+            mapped_data = dict(
+                listid=ldata['id'],
+                name=ldata['listname'],
+                subscribers=u'',
+                campaigns=u'',
+                emails=u'',
+            )
+            result.append(
+                ActiveCampaignList(**mapped_data)
+            )
+        if result:
+            self.lists = result
 
 
 class ActiveCampaignField(object):
