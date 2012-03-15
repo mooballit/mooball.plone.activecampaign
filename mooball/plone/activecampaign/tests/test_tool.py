@@ -29,17 +29,17 @@ class TestToolUnit(unittest.TestCase):
     def test_format_url_keys(self):
         tool = ActiveCampaignTool()
         result = tool.format_url_keys('p', [1, 'short-list'])
-        self.assertEquals(['p[1]', 'p[short-list]'], result)
+        self.assertEqual(['p[1]', 'p[short-list]'], result)
 
     def test_get_formatted_fields(self):
         tool = ActiveCampaignTool()
         expected = {'p[1]': '1', 'p[short-list]': 'short-list'}
         result = tool.get_formatted_fields('p', ['1', 'short-list'])
-        self.assertEquals(expected, result)
+        self.assertEqual(expected, result)
 
         expected = {'p[1]': 'foo'}
         result = tool.get_formatted_fields('p', ['1'], ['foo'])
-        self.assertEquals(expected, result)
+        self.assertEqual(expected, result)
 
 
 class TestToolFudged(unittest.TestCase):
