@@ -66,7 +66,6 @@ class SearchSubscribers(plone.directives.form.Form):
             self.status = u'No mailing lists found'
         else:
             self.mlists = mlists
-            self.request.response.redirect(self.url(name='managemailinglists'))
 
 
 class ManageMailingLists(grok.View):

@@ -95,6 +95,10 @@ class TestToolFudged(unittest.TestCase):
         result = self.tool.get_list_information()
         self.assertEqual(2, len(result))
 
+        result = self.tool.get_list_information(['2'])
+        self.assertEqual(1, len(result))
+        self.assertEqual('BD-Test', result[0].name)
+
         result = self.tool.get_list_ids()
         self.assertEqual([u'8', u'2'], result)
 
@@ -140,7 +144,7 @@ class TestToolFudged(unittest.TestCase):
 
         subscriber = ActiveCampaignSubscriber(email=u'roman@mooball.net')
         result = self.tool.get_lists_by(subscriber)
-        self.assertEqual(3, len(result))
+        self.assertEqual(1, len(result))
 
 
 class TestTool(unittest.TestCase):
