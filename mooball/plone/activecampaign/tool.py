@@ -11,18 +11,13 @@ import Products.CMFCore.utils
 import datetime
 import json
 import logging
-import plone.memoize.ram
-import time
+import mooball.plone.activecampaign.cache
+import plone.memoize.volatile
 import urllib
 import urllib2
 import zope.container.interfaces
 import zope.interface
 import zope.schema
-
-
-def _get_list_information_cachekey(method, tool, forcereload=False):
-    cachekey = forcereload and 1 or time.time() // (60 * 60)
-    return cachekey
 
 
 class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
@@ -175,7 +170,9 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
                 result.append(ActiveCampaignList(**json[k]))
         return result
 
-    @plone.memoize.ram.cache(_get_list_information_cachekey)
+    @plone.memoize.volatile.cache(
+        mooball.plone.activecampaign.cache._get_list_information_cachekey,
+        get_cache=mooball.plone.activecampaign.cache.store_on_self)
     def _get_list_information_helper(self, forcereload=False):
         json = self.post_to_active_campaign(
             dict(api_action='list_list',

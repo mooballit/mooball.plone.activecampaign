@@ -36,4 +36,7 @@ def test_suite():
             'README.txt', package='mooball.plone.activecampaign',
             optionflags=OPTIONS, globs=GLOBS),
             layer=ACTIVECAMPAIGN_INTEGRATION_TESTING),
-        ])
+        doctest.DocTestSuite(
+            'mooball.plone.activecampaign.cache',
+        ),
+    ])
