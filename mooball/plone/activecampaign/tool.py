@@ -20,8 +20,7 @@ import zope.interface
 import zope.schema
 
 
-def _get_list_information_cachekey(method, tool, listids=None,
-                                   forcereload=False):
+def _get_list_information_cachekey(method, tool, forcereload=False):
     cachekey = forcereload and 1 or time.time() // (60 * 60)
     return cachekey
 
