@@ -253,10 +253,12 @@ class IActiveCampaignField(zope.interface.Interface):
 
     onfocus = zope.schema.TextLine(
         title=u'Default Value',
+        required=False,
     )
 
     bubble_content = zope.schema.TextLine(
         title=u'Tooltip',
+        required=False,
     )
 
     label = zope.schema.Choice(
