@@ -1,3 +1,4 @@
+import plone.directives.form
 import zope.interface
 import zope.schema
 import zope.schema.vocabulary
@@ -287,11 +288,12 @@ class IActiveCampaignField(zope.interface.Interface):
         """
 
 
-class IActiveCampaignList(zope.interface.Interface):
+class IActiveCampaignList(plone.directives.form.Schema):
     """
     An active campaign mailing list.
     """
 
+    plone.directives.form.omitted('listid')
     listid = zope.schema.TextLine(
         title=u'List ID',
     )
@@ -300,23 +302,30 @@ class IActiveCampaignList(zope.interface.Interface):
         title=u'Title',
     )
 
+    plone.directives.form.omitted('cdate')
     cdate = zope.schema.Datetime(
         title=u'Created',
     )
 
+    plone.directives.form.omitted('subscribers')
     subscribers = zope.schema.TextLine(
         title=u'Subscribers',
     )
 
+    plone.directives.form.omitted('campaigns')
     campaigns = zope.schema.TextLine(
         title=u'Campaigns Sent',
     )
 
+    plone.directives.form.omitted('emails')
     emails = zope.schema.TextLine(
         title=u'Emails Sent',
     )
 
     fields = zope.schema.List(
         title=u'Fields',
+        value_type=zope.schema.Object(
+            schema=IActiveCampaignField
+        ),
         required=False,
     )

@@ -6,6 +6,7 @@ from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 from mooball.plone.activecampaign.tool import ActiveCampaignSubscriber
 from plone.app.controlpanel.events import ConfigurationChangedEvent
 from plone.app.controlpanel.form import ControlPanelForm
+from plone.i18n.normalizer.interfaces import IURLNormalizer
 from zope.app.form import CustomWidgetFactory
 from zope.app.form.browser.textwidgets import PasswordWidget
 import plone.directives.form
@@ -15,6 +16,26 @@ import zope.component
 import zope.event
 import zope.formlib.form
 import zope.publisher.interfaces
+
+
+class AddMailingList(plone.directives.form.SchemaAddForm):
+    grok.context(IActiveCampaignTool)
+    grok.require('cmf.ManagePortal')
+    schema = IActiveCampaignList
+    ignoreContext = True
+
+    def create(self, data):
+        return data
+
+    def add(self, data):
+        name = zope.component.getUtility(IURLNormalizer).normalize(
+            data['name'])
+        mlistid = self.context.add_list(name=name, title=data['name'])
+        IStatusMessage(self.request).addStatusMessage(
+            '{mlistid} added'.format(mlistid=mlistid), type='info')
+        url = zope.component.getMultiAdapter(
+            (self.context, self.request), name='absolute_url')()
+        self.request.response.redirect(url + '/managemailinglists')
 
 
 class ManageTool(ControlPanelForm):

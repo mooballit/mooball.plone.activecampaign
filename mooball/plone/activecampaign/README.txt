@@ -125,3 +125,13 @@ We can click on a mailing list to add custom fields:
 >>> print browser.contents
 <!DOCTYPE ...
 ...BD TEST LIST...
+
+Creating Mailing Lists
+----------------------
+
+The AC tool allows to create mailing lists through Plone.
+
+>>> set_api_url_to_action('list_add_success')
+>>> browser.open(portal_url + '/portal_activecampaign/@@addmailinglist')
+>>> browser.getControl('Title').value = 'Plone Mailing List'
+>>> browser.getControl('Save').click()
