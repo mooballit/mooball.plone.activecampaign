@@ -14,11 +14,11 @@ class PurgableCleanupDict(plone.memoize.volatile.CleanupDict):
 
     The '-1' key purges the dict and therefore the cache storage:
 
-        >>> d[-1] = 'ignored'
-        >>> d[-1] # doctest: +ELLIPSIS
+        >>> d['foo:-1'] = 'ignored'
+        >>> d['foo:-1'] # doctest: +ELLIPSIS
         Traceback (most recent call last):
         ...
-        KeyError: -1
+        KeyError: 'foo:-1'
         >>> d['foo'] # doctest: +ELLIPSIS
         Traceback (most recent call last):
         ...
@@ -26,7 +26,7 @@ class PurgableCleanupDict(plone.memoize.volatile.CleanupDict):
     """
 
     def __setitem__(self, key, value):
-        if key == -1:
+        if key.endswith('-1'):
             self.purge()
         else:
             super(PurgableCleanupDict, self).__setitem__(key, value)

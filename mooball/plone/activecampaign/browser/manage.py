@@ -31,6 +31,7 @@ class AddMailingList(plone.directives.form.SchemaAddForm):
         name = zope.component.getUtility(IURLNormalizer).normalize(
             data['name'])
         mlistid = self.context.add_list(name=name, title=data['name'])
+        self.context.get_list_information(forcereload=True)
         IStatusMessage(self.request).addStatusMessage(
             '{mlistid} added'.format(mlistid=mlistid), type='info')
         url = zope.component.getMultiAdapter(
