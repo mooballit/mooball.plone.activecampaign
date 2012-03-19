@@ -119,12 +119,14 @@ should be deleted:
 Custom Fields
 -------------
 
-We can click on a mailing list to add custom fields:
+We can click on a mailing list to see custom added fields:
 
 >>> browser.getLink('BD TEST LIST').click()
 >>> print browser.contents
 <!DOCTYPE ...
 ...BD TEST LIST...
+...Country...
+...Category...
 
 Creating Mailing Lists
 ----------------------
