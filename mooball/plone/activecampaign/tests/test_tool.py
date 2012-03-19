@@ -45,6 +45,8 @@ class TestToolUnit(unittest.TestCase):
 
 class TestToolFudged(unittest.TestCase):
 
+    layer = ACTIVECAMPAIGN_FUNCTIONAL_TESTING
+
     def setUp(self):
         self.tool = ActiveCampaignTool()
         self.tool.manage_addProperty('api_url', 'http://ignored', 'string')
@@ -139,8 +141,15 @@ class TestToolFudged(unittest.TestCase):
     def test_get_lists_by(self, urlopen):
         resultfilep = os.path.join(
             os.path.dirname(__file__), 'testdata', 'get_lists_by.json')
-        jsondata = json.load(open(resultfilep, 'r'))
-        urlopen = self.fudgify(jsondata, urlopen)
+        list_listfp = os.path.join(
+            os.path.dirname(__file__), 'testdata', 'list_list.json')
+        jsondata = json.load(open(list_listfp, 'r'))
+
+        urlopen = self.fudgify(json.load(open(resultfilep, 'r')), urlopen)
+        urlopen.next_call().with_args(
+            'http://ignored',
+            fudge.inspector.arg.any()).returns(
+                StringIO.StringIO(json.dumps(jsondata)))
 
         subscriber = ActiveCampaignSubscriber(email=u'roman@mooball.net')
         result = self.tool.get_lists_by(subscriber)
