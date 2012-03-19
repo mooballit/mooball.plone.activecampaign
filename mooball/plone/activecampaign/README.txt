@@ -90,21 +90,6 @@ showing on the:
 ...BD TEST LIST...
 
 
-Filtering Mailing Lists by Email
---------------------------------
-
-It is possible to filter the mailing lists by e-mail:
-
->>> set_api_url_to_action('subscriber_view_email')
->>> browser.getControl('Email').value = 'tom@mooball.com'
->>> browser.getControl('Search', index=2).click()
->>> print browser.contents
-<!DOCTYPE ...
-...Manage Mailing Lists...
-...No mailing lists found...
-
-But also to find no mailing lists associated with this e-mail.
-
 Deleting Mailing Lists
 ----------------------
 
@@ -121,19 +106,11 @@ Custom Fields
 
 We can click on a mailing list to see custom added fields:
 
+>>> set_api_url_to_action('list_list')
+>>> browser.getLink('Active Campaign Setup').click()
 >>> browser.getLink('BD TEST LIST').click()
 >>> print browser.contents
 <!DOCTYPE ...
 ...BD TEST LIST...
 ...Country...
 ...Category...
-
-Creating Mailing Lists
-----------------------
-
-The AC tool allows to create mailing lists through Plone.
-
->>> set_api_url_to_action('list_add_success')
->>> browser.open(portal_url + '/portal_activecampaign/@@addmailinglist')
->>> browser.getControl('Title').value = 'Plone Mailing List'
->>> browser.getControl('Save').click()
