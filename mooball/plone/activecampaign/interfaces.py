@@ -324,6 +324,7 @@ class IActiveCampaignList(plone.directives.form.Schema):
         title=u'Emails Sent',
     )
 
+    plone.directives.form.omitted('fields')
     fields = zope.schema.List(
         title=u'Fields',
         value_type=zope.schema.Object(
