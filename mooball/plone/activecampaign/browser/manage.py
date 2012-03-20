@@ -80,10 +80,16 @@ class SearchSubscribers(plone.directives.form.Form):
     @z3c.form.button.buttonAndHandler(u'Search', name='search')
     def search(self, action):
         data, errors = self.extractData()
-        mlists = self.context.get_lists_by(
-            ActiveCampaignSubscriber(email=data['searchTerm']))
         if errors:
             self.status = self.formErrorsMessage
+            return
+
+        if data.get('searchTerm') is None:
+            self.status = u'The given e-mail is empty'
+            return
+
+        mlists = self.context.get_lists_by(
+            ActiveCampaignSubscriber(email=data['searchTerm']))
         if not mlists:
             self.status = u'No mailing lists found'
         else:
