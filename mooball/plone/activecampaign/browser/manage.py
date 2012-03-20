@@ -143,6 +143,8 @@ class ListTraverser(object):
             (self.context, self.request), name=name)
         if view is not None:
             return view
+        elif hasattr(self.context, name):
+            return getattr(self.context, name)
         else:
             info = self.context.get_list_information()
             mlist = [x for x in info if x.listid == name]
