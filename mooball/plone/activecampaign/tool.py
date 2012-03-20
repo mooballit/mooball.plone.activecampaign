@@ -107,9 +107,9 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
         msg = ("Calling {url}/{api_action} with {query}".format(
             url=url, query=query, **query))
-        logger.info(msg)
+        logger.debug(msg)
         result = urllib2.urlopen(url, urllib.urlencode(query)).read()
-        logger.info(result)
+        logger.debug(result)
 
         try:
             result = json.loads(result)
