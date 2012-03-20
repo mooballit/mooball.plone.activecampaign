@@ -93,6 +93,7 @@ class SearchSubscribers(plone.directives.form.Form):
 class ManageMailingLists(grok.View):
     grok.context(IActiveCampaignTool)
     grok.require('cmf.ManagePortal')
+    grok.name('index_html')
     mlists = None
 
     def __call__(self):
