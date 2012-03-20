@@ -3,7 +3,7 @@
  <configlet title="Active Campaign Setup"
     action_id="mooballploneactivecampaign`" appId="" category="Products"
     condition_expr="" icon_expr=""
-    url_expr="string:${portal_url}/portal_activecampaign/@@managemailinglists"
+    url_expr="string:${portal_url}/portal_activecampaign"
     visible="True">
   <permission>Manage portal</permission>
  </configlet>

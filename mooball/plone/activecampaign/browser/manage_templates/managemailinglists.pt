@@ -25,7 +25,7 @@
           tal:condition="view/searchform | nothing" />
 
         <form action="."
-          tal:attributes="action string:${context/@@absolute_url}/managemailinglists"
+          tal:attributes="action string:${context/@@absolute_url}/"
           >
           <table class="listing" tal:define="info view/mlists">
             <thead>
