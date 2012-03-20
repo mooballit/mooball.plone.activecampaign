@@ -52,6 +52,11 @@
             </tbody>
           </table>
           <input type="submit" name="delete_selected" value="Delete Selected" />
+          or
+          <a class="button"
+            tal:attributes="href
+            string:${context/@@absolute_url}/@@addmailinglist"
+            title="Create new mailing list">Create new mailing list</a>
         </form>
       </span>
     </metal:content-core>
