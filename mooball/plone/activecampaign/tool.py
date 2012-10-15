@@ -1,10 +1,10 @@
+from AccessControl.class_init import InitializeClass
 from mooball.plone.activecampaign.interfaces import ACTIVE
 from mooball.plone.activecampaign.interfaces import APIUnauthorized
 from mooball.plone.activecampaign.interfaces import IActiveCampaignField
 from mooball.plone.activecampaign.interfaces import IActiveCampaignList
 from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
-import Globals
 import OFS.Folder
 import OFS.SimpleItem
 import Products.CMFCore.utils
@@ -213,7 +213,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
             return subscriber.lists
 
 
-Globals.InitializeClass(ActiveCampaignTool)
+InitializeClass(ActiveCampaignTool)
 
 
 @zope.component.adapter(IActiveCampaignTool,
