@@ -63,6 +63,17 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         params = dict(api_action='list_add',
                       name=title,
                       stringid=name)
+        
+        if self.hosted_account:
+            # Add required fields for hosted accounts
+            params.update( {
+                'sender_name': self.hosted_sender_name,
+                'sender_addr1': self.hosted_sender_addr1,
+                'sender_zip': self.hosted_sender_zip,
+                'sender_city': self.hosted_sender_city,
+                'sender_country': self.hosted_sender_country,
+            } )
+        
         params.update(kw)
         result = self.post_to_active_campaign(params)
         return result['id']
@@ -230,6 +241,12 @@ def after_tool_added(tool, event):
     tool.manage_addProperty('api_url', '', 'string')
     tool.manage_addProperty('api_user', '', 'string')
     tool.manage_addProperty('api_password', '', 'string')
+    tool.manage_addProperty('hosted_account', False, 'boolean')
+    tool.manage_addProperty('hosted_sender_name', '', 'string')
+    tool.manage_addProperty('hosted_sender_addr1', '', 'string')
+    tool.manage_addProperty('hosted_sender_zip', '', 'string')
+    tool.manage_addProperty('hosted_sender_city', '', 'string')
+    tool.manage_addProperty('hosted_sender_country', '', 'string')
 
 
 class ActiveCampaignSubscriber(object):

@@ -176,6 +176,34 @@ class IActiveCampaignTool(zope.interface.Interface):
                      ' password is stored in clear text and send in'
                      ' clear text.')
     )
+    
+    hosted_account = zope.schema.Bool(
+        title = u'Account is a Hosted Active Campaign Account',
+        description = ( u'Check this if your account is hosted by'
+                        'Active Campaign.' ),
+        required = False
+    )
+    
+    hosted_sender_name = zope.schema.TextLine(
+        title = u'Default sender Name (Hosted Accounts Only)',
+        required = False
+    )
+    hosted_sender_addr1 = zope.schema.TextLine(
+        title = u'Default sender Address (Hosted Accounts Only)',
+        required = False
+    )
+    hosted_sender_zip = zope.schema.TextLine(
+        title = u'Default sender Post Code (Hosted Accounts Only)',
+        required = False
+    )
+    hosted_sender_city = zope.schema.TextLine(
+        title = u'Default sender City (Hosted Accounts Only)',
+        required = False
+    )
+    hosted_sender_country = zope.schema.TextLine(
+        title = u'Default sender Country (Hosted Accounts Only)',
+        required = False
+    )
 
 
 class IActiveCampaignSubscriber(zope.interface.Interface):
