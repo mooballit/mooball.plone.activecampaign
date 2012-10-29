@@ -6,6 +6,7 @@ from mooball.plone.activecampaign.interfaces import IActiveCampaignSubscriber
 from mooball.plone.activecampaign.interfaces import IActiveCampaignTool
 from mooball.plone.activecampaign.tool import ActiveCampaignSubscriber
 from mooball.plone.activecampaign.tool import ActiveCampaignTool
+from mooball.plone.activecampaign.tool import after_tool_added
 import StringIO
 import fudge
 import fudge.inspector
@@ -49,9 +50,8 @@ class TestToolFudged(unittest.TestCase):
 
     def setUp(self):
         self.tool = ActiveCampaignTool()
-        self.tool.manage_addProperty('api_url', 'http://ignored', 'string')
-        self.tool.manage_addProperty('api_username', '', 'string')
-        self.tool.manage_addProperty('api_password', '', 'string')
+        after_tool_added(self.tool, None)
+        self.tool.manage_changeProperties(api_url='http://ignored')
 
     def fudgify(self, resultdata, fakeurlopen):
         """ Encodes it to json and declares a call order on the fudged
@@ -102,7 +102,7 @@ class TestToolFudged(unittest.TestCase):
         self.assertEqual('BD-Test', result[0].name)
 
         result = self.tool.get_list_ids()
-        self.assertEqual([u'8', u'2'], result)
+        self.assertEqual([u'foobar', u'2'], result)
 
     @fudge.patch('urllib2.urlopen')
     def test_post_to_active_campaign(self, urlopen):
