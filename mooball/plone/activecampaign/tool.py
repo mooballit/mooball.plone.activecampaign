@@ -177,6 +177,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         result = []
         json = self._get_list_information_helper(forcereload)
         for k in json.keys():
+            json[k]['listid'] = json[k]['id']
             if idstolist == 'all' or json[k]['listid'] in idstolist:
                 result.append(ActiveCampaignList(**json[k]))
         return result
