@@ -57,7 +57,8 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         if custom_parameters is not None:
             params.update(custom_parameters)
 
-        self.post_to_active_campaign(params)
+        result = self.post_to_active_campaign(params)
+        return result['result_code']
 
     def add_list(self, name, title, **kw):
         params = dict(api_action='list_add',
