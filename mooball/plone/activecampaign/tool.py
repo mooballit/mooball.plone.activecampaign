@@ -1,5 +1,5 @@
 from AccessControl.class_init import InitializeClass
-from mooball.plone.activecampaign.interfaces import ACTIVE
+from mooball.plone.activecampaign.interfaces import ACTIVE, UNSUBSCRIBED
 from mooball.plone.activecampaign.interfaces import APIUnauthorized
 from mooball.plone.activecampaign.interfaces import IActiveCampaignField
 from mooball.plone.activecampaign.interfaces import IActiveCampaignList
@@ -59,6 +59,35 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
         result = self.post_to_active_campaign(params)
         return result['result_code']
+
+    def sync_subscriber( self, subscriber, subids = [], unsubids = [] ):
+        assert IActiveCampaignSubscriber.providedBy(subscriber)
+        
+        params = dict(
+            api_user=self.get_api_username(),
+            api_pass=self.get_api_password(),
+            api_action='subscriber_sync',
+            api_output='json',
+            email=subscriber.email,
+            first_name=subscriber.first_name,
+            last_name=subscriber.last_name,
+        )
+
+        params.update(
+            self.get_formatted_fields('p', subids + unsubids, subids + unsubids)
+        )
+        params.update(
+            self.get_formatted_fields('status', subids,
+                                      [ACTIVE] * len(subids))
+        )
+        params.update(
+            self.get_formatted_fields('status', unsubids,
+                                      [UNSUBSCRIBED] * len(unsubids))
+        )
+
+        result = self.post_to_active_campaign(params)
+        return result['result_code']
+
 
     def add_list(self, name, title, **kw):
         params = dict(api_action='list_add',
