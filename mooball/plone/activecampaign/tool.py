@@ -88,6 +88,21 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         result = self.post_to_active_campaign(params)
         return result['result_code']
 
+    def edit_subscriber_email( self, subscriber, new_email ):
+        assert IActiveCampaignSubscriber.providedBy(subscriber)
+        
+        params = dict(
+            api_user=self.get_api_username(),
+            api_pass=self.get_api_password(),
+            api_action='subscriber_edit',
+            api_output='json',
+            overwrite = 0,
+            id = subscriber.sid,
+            email=new_email,
+        )
+
+        result = self.post_to_active_campaign(params)
+        return result['result_code']
 
     def add_list(self, name, title, **kw):
         params = dict(api_action='list_add',
