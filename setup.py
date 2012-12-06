@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.3'
+version = '0.4'
 tests_require = ['plone.app.testing',
                  'fudge',
                  'testfixtures',
