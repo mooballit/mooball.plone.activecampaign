@@ -7,8 +7,6 @@ from mooball.plone.activecampaign.tool import ActiveCampaignSubscriber
 from plone.app.controlpanel.events import ConfigurationChangedEvent
 from plone.app.controlpanel.form import ControlPanelForm
 from plone.i18n.normalizer.interfaces import IURLNormalizer
-from zope.app.form import CustomWidgetFactory
-from zope.app.form.browser.textwidgets import PasswordWidget
 import plone.directives.form
 import plone.protect
 import z3c.form.field
@@ -43,9 +41,6 @@ class ManageTool(ControlPanelForm):
     form_name = "Active Campaign Settings"
     description = "Tool Settings for Active Campaign API Tool"
     form_fields = zope.formlib.form.FormFields(IActiveCampaignTool)
-    pass_widget = CustomWidgetFactory(PasswordWidget,
-                                      extra='autocomplete="off"')
-    form_fields['api_password'].custom_widget = pass_widget
 
     @zope.formlib.form.action(u'Save', name=u'save')
     def handle_edit_action(self, action, data):
@@ -117,12 +112,11 @@ class ManageMailingLists(grok.View):
 
     def provides_api_information(self):
         """
-        Returns True if api_url, api_username and api_password are set
+        Returns True if api_url and api_key are set
         and therefore an API call can be made.
         """
         return (self.context.get_api_url() and
-                self.context.get_api_username() and
-                self.context.get_api_password())
+                self.context.get_api_key())
 
     def delete_lists(self):
         if self.context.delete_lists(self.request.form['delete']):

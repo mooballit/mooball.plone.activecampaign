@@ -37,8 +37,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         assert IActiveCampaignSubscriber.providedBy(subscriber)
 
         params = dict(
-            api_user=self.get_api_username(),
-            api_pass=self.get_api_password(),
+            api_key=self.get_api_key(),
             api_action='subscriber_add',
             api_output='json',
             email=subscriber.email,
@@ -62,10 +61,9 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
     def sync_subscriber( self, subscriber, subids = [], unsubids = [] ):
         assert IActiveCampaignSubscriber.providedBy(subscriber)
-        
+
         params = dict(
-            api_user=self.get_api_username(),
-            api_pass=self.get_api_password(),
+            api_key=self.get_api_key(),
             api_action='subscriber_sync',
             api_output='json',
             email=subscriber.email,
@@ -90,10 +88,9 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
 
     def edit_subscriber_email( self, subscriber, new_email ):
         assert IActiveCampaignSubscriber.providedBy(subscriber)
-        
+
         params = dict(
-            api_user=self.get_api_username(),
-            api_pass=self.get_api_password(),
+            api_key=self.get_api_key(),
             api_action='subscriber_edit',
             api_output='json',
             overwrite = 0,
@@ -108,7 +105,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         params = dict(api_action='list_add',
                       name=title,
                       stringid=name)
-        
+
         if self.hosted_account:
             # Add required fields for hosted accounts
             params.update( {
@@ -118,7 +115,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
                 'sender_city': self.hosted_sender_city,
                 'sender_country': self.hosted_sender_country,
             } )
-        
+
         params.update(kw)
         result = self.post_to_active_campaign(params)
         return result['id']
@@ -156,8 +153,7 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         assert url
 
         query.update(dict(
-            api_user=self.get_api_username(),
-            api_pass=self.get_api_password(),
+            api_key=self.get_api_key(),
             api_output='json',
         ))
 
@@ -178,11 +174,10 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
         if (result_code == 0 and 'not authorized' in
             result['result_message']):
             result.update(api_url=self.get_api_url(),
-                          api_username=self.get_api_username(),
-                          api_password=self.get_api_password())
+                          api_key=self.get_api_key())
             msg = ('{result_message}. Perhaps you were providing the'
                    ' wrong credentials and API URL? URL: {api_url},'
-                   ' api_username: {api_username}'.format(**result))
+                   ' api_key: {api_key}'.format(**result))
             raise APIUnauthorized(msg)
         if result_code == 0:
             logger.error(result['result_message'])
@@ -244,11 +239,8 @@ class ActiveCampaignTool(Products.CMFCore.utils.UniqueObject,
     def get_api_url(self):
         return self.getProperty('api_url')
 
-    def get_api_username(self):
-        return self.getProperty('api_user')
-
-    def get_api_password(self):
-        return self.getProperty('api_password')
+    def get_api_key(self):
+        return self.getProperty('api_key')
 
     def get_subscriber_by(self, email):
         params = dict(api_action='subscriber_view_email',
@@ -281,12 +273,10 @@ def after_tool_added(tool, event):
     to an empty string. Properties which are created by default are:
 
         * api_url
-        * api_user
-        * api_password
+        * api_key
     """
     tool.manage_addProperty('api_url', '', 'string')
-    tool.manage_addProperty('api_user', '', 'string')
-    tool.manage_addProperty('api_password', '', 'string')
+    tool.manage_addProperty('api_key', '', 'string')
     tool.manage_addProperty('hosted_account', False, 'boolean')
     tool.manage_addProperty('hosted_sender_name', '', 'string')
     tool.manage_addProperty('hosted_sender_addr1', '', 'string')
